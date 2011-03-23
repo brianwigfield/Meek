@@ -1,0 +1,12 @@
+﻿@model Meek.Content.CreatePartial
+
+@{
+    Layout = null;
+}
+
+@if (Model.IsContentAdmin)
+{
+    <div class="MeekCreateLink">
+        <a href="@Model.CreateLink">Create Missing Content</a>
+    </div>
+}

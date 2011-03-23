@@ -1,0 +1,296 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{045A9B80-6DE1-4A31-AE04-81163093C492}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Meek</RootNamespace>
+    <AssemblyName>Meek</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AcceptParameterAttribute.cs" />
+    <Compile Include="Authorization.cs" />
+    <Compile Include="BasicAuthorization.cs" />
+    <Compile Include="CkEditorRouteHandler.cs" />
+    <Compile Include="Configuration\ConfigProvider.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Configuration\DefaultServices.cs" />
+    <Compile Include="Configuration\MeekConfigurationSection.cs" />
+    <Compile Include="Configuration\Services.cs" />
+    <Compile Include="Configuration\StandardConfigProvider.cs" />
+    <Compile Include="ContentPathProvider.cs" />
+    <Compile Include="ContentVirtualFile.cs" />
+    <Compile Include="Content\CreatePartial.cs" />
+    <Compile Include="Content\Manage.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="HtmlHelpers\Routing.cs" />
+    <Compile Include="HttpNotFoundViewResult.cs" />
+    <Compile Include="MeekController.cs" />
+    <Compile Include="MeekRoute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Storage\FileSystemRepository.cs" />
+    <Compile Include="Storage\MeekContent.cs" />
+    <Compile Include="Storage\Repository.cs" />
+    <Compile Include="Storage\ContentTypes.cs" />
+    <Compile Include="Storage\InMemoryRepository.cs" />
+    <Compile Include="Storage\SQLRepository.cs" />
+    <Compile Include="VirtualFileStream.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\Manage.cshtml" />
+    <EmbeddedResource Include="Content\ckeditor\adapters\jquery.js" />
+    <EmbeddedResource Include="Content\ckeditor\ckeditor.js" />
+    <EmbeddedResource Include="Content\ckeditor\config.js" />
+    <EmbeddedResource Include="Content\ckeditor\contents.css" />
+    <EmbeddedResource Include="Content\ckeditor\images\spacer.gif" />
+    <EmbeddedResource Include="Content\ckeditor\lang\af.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\ar.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\bg.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\bn.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\bs.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\ca.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\cs.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\cy.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\da.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\de.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\el.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\en-au.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\en-ca.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\en-gb.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\en.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\eo.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\es.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\et.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\eu.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\fa.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\fi.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\fo.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\fr-ca.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\fr.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\gl.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\gu.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\he.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\hi.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\hr.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\hu.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\is.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\it.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\ja.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\km.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\ko.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\lt.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\lv.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\mn.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\ms.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\nb.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\nl.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\no.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\pl.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\pt-br.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\pt.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\ro.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\ru.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\sk.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\sl.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\sr-latn.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\sr.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\sv.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\th.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\tr.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\uk.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\vi.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\zh-cn.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\zh.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\_languages.js" />
+    <EmbeddedResource Include="Content\ckeditor\lang\_translationstatus.txt" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\a11yhelp\dialogs\a11yhelp.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\a11yhelp\lang\en.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\a11yhelp\lang\he.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\about\dialogs\about.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\about\dialogs\logo_ckeditor.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\adobeair\plugin.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\autogrow\plugin.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\clipboard\dialogs\paste.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\colordialog\dialogs\colordialog.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\dialog\dialogDefinition.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\div\dialogs\div.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\find\dialogs\find.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\flash\dialogs\flash.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\flash\images\placeholder.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\forms\dialogs\button.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\forms\dialogs\checkbox.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\forms\dialogs\form.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\forms\dialogs\hiddenfield.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\forms\dialogs\radio.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\forms\dialogs\select.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\forms\dialogs\textarea.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\forms\dialogs\textfield.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\forms\images\hiddenfield.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\iframedialog\plugin.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\iframe\dialogs\iframe.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\iframe\images\placeholder.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\image\dialogs\image.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\link\dialogs\anchor.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\link\dialogs\link.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\link\images\anchor.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\liststyle\dialogs\liststyle.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\pagebreak\images\pagebreak.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\pastefromword\filter\default.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\pastetext\dialogs\pastetext.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\placeholder\dialogs\placeholder.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\placeholder\lang\en.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\placeholder\placeholder.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\placeholder\plugin.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\scayt\dialogs\options.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\scayt\dialogs\toolbar.css" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\showblocks\images\block_address.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\showblocks\images\block_blockquote.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\showblocks\images\block_div.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\showblocks\images\block_h1.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\showblocks\images\block_h2.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\showblocks\images\block_h3.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\showblocks\images\block_h4.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\showblocks\images\block_h5.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\showblocks\images\block_h6.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\showblocks\images\block_p.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\showblocks\images\block_pre.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\dialogs\smiley.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\angel_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\angry_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\broken_heart.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\confused_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\cry_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\devil_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\embaressed_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\envelope.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\heart.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\kiss.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\lightbulb.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\omg_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\regular_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\sad_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\shades_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\teeth_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\thumbs_down.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\thumbs_up.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\tounge_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\whatchutalkingabout_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\smiley\images\wink_smile.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\specialchar\dialogs\specialchar.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\specialchar\lang\en.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\styles\styles\default.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\tableresize\plugin.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\tabletools\dialogs\tableCell.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\table\dialogs\table.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\templates\dialogs\templates.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\templates\templates\default.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\templates\templates\images\template1.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\templates\templates\images\template2.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\templates\templates\images\template3.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\uicolor\dialogs\uicolor.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\uicolor\lang\en.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\uicolor\lang\he.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\uicolor\plugin.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\uicolor\uicolor.gif" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\uicolor\yui\assets\hue_bg.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\uicolor\yui\assets\hue_thumb.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\uicolor\yui\assets\picker_mask.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\uicolor\yui\assets\picker_thumb.png" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\uicolor\yui\assets\yui.css" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\uicolor\yui\yui.js" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\wsc\dialogs\ciframe.html" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\wsc\dialogs\tmpFrameset.html" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\wsc\dialogs\wsc.css" />
+    <EmbeddedResource Include="Content\ckeditor\plugins\wsc\dialogs\wsc.js" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\dialog.css" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\editor.css" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\icons.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\icons_rtl.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\images\dialog_sides.gif" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\images\dialog_sides.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\images\dialog_sides_rtl.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\images\mini.gif" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\images\noimage.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\images\sprites.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\images\sprites_ie6.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\images\toolbar_start.gif" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\skin.js" />
+    <EmbeddedResource Include="Content\ckeditor\skins\kama\templates.css" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\dialog.css" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\editor.css" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\icons.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\icons_rtl.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\images\dialog_sides.gif" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\images\dialog_sides.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\images\dialog_sides_rtl.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\images\mini.gif" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\images\noimage.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\images\sprites.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\images\sprites_ie6.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\skin.js" />
+    <EmbeddedResource Include="Content\ckeditor\skins\office2003\templates.css" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\dialog.css" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\editor.css" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\icons.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\icons_rtl.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\images\dialog_sides.gif" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\images\dialog_sides.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\images\dialog_sides_rtl.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\images\mini.gif" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\images\noimage.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\images\sprites.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\images\sprites_ie6.png" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\images\toolbar_start.gif" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\skin.js" />
+    <EmbeddedResource Include="Content\ckeditor\skins\v2\templates.css" />
+    <EmbeddedResource Include="Content\ckeditor\themes\default\theme.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\CreatePartial.cshtml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

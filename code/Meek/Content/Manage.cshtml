@@ -1,0 +1,31 @@
+﻿@model Meek.Content.Manage
+
+@{
+    ViewBag.Title = "Manage content";
+}
+
+<script type="text/javascript" src="@ViewBag.CkEditorPath"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <div style="padding:5px;">
+        Content URL: @Html.TextBoxFor(m => m.ManageUrl)
+        @Html.ValidationMessageFor(m => m.ManageUrl)
+    </div>
+    <div style="padding:5px;">
+        Title: @Html.TextBoxFor(m => m.ContentTitle)
+        @Html.ValidationMessageFor(m => m.ContentTitle)
+    </div>
+    <div style="padding:5px;">
+        Partial Content: @Html.CheckBoxFor(m => m.Partial)
+        @Html.ValidationMessageFor(m => m.Partial)
+    </div>
+    <div style="padding:5px;">
+        @Html.ValidationMessageFor(m => m.EditorContents)
+        <textarea class="ckeditor" cols="80" id="EditorContents" name="EditorContents" rows="10">
+            @Model.EditorContents
+        </textarea>
+    </div>
+    <button name="submit" value="save" id="SaveContent">Save</button>
+    <button name="submit" value="delete" id="DeleteContent">Delete</button>
+}

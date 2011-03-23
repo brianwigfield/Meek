@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "News";
+}
+
+<h2>News</h2>
+
+<p>
+<h2>Daily</h2>
+     @{Html.RenderRoute("news/daily");}
+</p>
+
+<p>
+<h2>Weekly</h2>
+     @{Html.RenderRoute("news/weekly");}
+</p>
