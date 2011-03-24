@@ -51,7 +51,7 @@ namespace Meek.ContentSite
             //Do this to setup the test data before Initialize() for automated tests using in memory repo
             SetupRepository(kernel.Get<Repository>());
 
-            Configuration.Configuration.Initialize();
+            BootStrapper.Initialize();
             //Configuration.Configuration.Initialize(repository, new BasicAuthorization(x => x.User.IsInRole("Content Admin")), "Missing");
         }
 

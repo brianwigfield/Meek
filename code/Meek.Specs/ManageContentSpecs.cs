@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Machine.Fakes;
 using Machine.Specifications;
+using Meek.Configuration;
 using Meek.Storage;
 using Moq;
 using MvcContrib.TestHelper;
@@ -227,9 +228,15 @@ namespace Meek.Specs
     {
 
         Establish that = () =>
-                         The<Authorization>()
-                             .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
-                             .Return(false);
+            {
+                The<Authorization>()
+                    .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+                    .Return(false);
+
+                The<Settings>()
+                    .WhenToldTo(x => x.NotFoundView)
+                    .Return("NotFound");
+            };
 
         Because of = () =>
             _result = Subject.Manage("/a/bogus/url");

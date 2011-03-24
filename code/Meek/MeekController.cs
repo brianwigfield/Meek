@@ -6,6 +6,7 @@ using System.Web;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Meek.Configuration;
 using Meek.Content;
 using Meek.Storage;
 
@@ -17,6 +18,7 @@ namespace Meek
 
         readonly Repository _repository;
         readonly Authorization _auth;
+        readonly Settings _settings;
 
         protected override void OnException(ExceptionContext filterContext)
         {
@@ -25,24 +27,26 @@ namespace Meek
 
         public MeekController()
         {
-            _repository = Configuration.Configuration.Services.GetRepository();
-            _auth = Configuration.Configuration.Services.GetAuthorization();
+            _repository = BootStrapper.Services.GetRepository();
+            _auth = BootStrapper.Services.GetAuthorization();
+            _settings = BootStrapper.Settings;
         }
 
-        public MeekController(Repository repository, Authorization auth)
+        public MeekController(Repository repository, Authorization auth, Settings settings)
         {
             _repository = repository;
             _auth = auth;
+            _settings = settings;
         }
 
         public ActionResult Manage(string aspxerrorpath, bool partial = false)
         {
             if (!_auth.IsContentAdmin(HttpContext))
             {
-                return new HttpNotFoundViewResult(Configuration.Configuration.Config.NotFoundView);
+                return new HttpNotFoundViewResult(_settings.NotFoundView);
             }
 
-            ViewBag.CkEditorPath = Configuration.Configuration.Config.CkEditorPath + "/ckeditor.js";
+            ViewBag.CkEditorPath = _settings.CkEditorPath + "/ckeditor.js";
 
             var model = new Manage { ManageUrl = aspxerrorpath };
             if (model.ManageUrl.StartsWith("/"))
@@ -71,7 +75,7 @@ namespace Meek
             if (!_auth.IsContentAdmin(HttpContext))
                 return new HttpStatusCodeResult(403);
 
-            ViewBag.CkEditorPath = Configuration.Configuration.Config.CkEditorPath + "/ckeditor.js";
+            ViewBag.CkEditorPath = _settings.CkEditorPath + "/ckeditor.js";
 
             if (string.IsNullOrEmpty(model.ManageUrl))
                 ModelState.AddModelError("ManageUrl", "Url is required.");
@@ -130,7 +134,7 @@ namespace Meek
 
             var model = new CreatePartial()
                             {
-                                CreateLink = @"/" + Configuration.Configuration.Config.AltManageContentRoute + "?aspxerrorpath=" + content + "&partial=true",
+                                CreateLink = @"/" + _settings.AltManageContentRoute + "?aspxerrorpath=" + content + "&partial=true",
                                 IsContentAdmin = _auth.IsContentAdmin(HttpContext)
                             };
 
