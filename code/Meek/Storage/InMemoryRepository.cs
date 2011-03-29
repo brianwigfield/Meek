@@ -9,7 +9,8 @@ namespace Meek.Storage
     {
         public InMemoryRepository()
         {
-            Routes = new Dictionary<string, MeekContent>();
+            Content = new Dictionary<string, MeekContent>();
+            Files = new Dictionary<string, MeekFile>();
         }
 
         public bool Exists(string resource)
@@ -19,12 +20,12 @@ namespace Meek.Storage
 
         public MeekContent Get(string resource)
         {
-            return Routes.Single(x => x.Key.ToLower() == resource.ToLower()).Value;
+            return Content.Single(x => x.Key.ToLower() == resource.ToLower()).Value;
         }
 
         public IEnumerable<string> AvailableRoutes(ContentTypes? type)
         {
-            var query = Routes.AsQueryable();
+            var query = Content.AsQueryable();
 
             if (type.HasValue)
             {
@@ -40,23 +41,39 @@ namespace Meek.Storage
 
         public void Save(string route, MeekContent content)
         {
-            var caseSensitiveKey = Routes.Select(x => x.Key).FirstOrDefault(x => x.ToLower() == route.ToLower());
+            var caseSensitiveKey = Content.Select(x => x.Key).FirstOrDefault(x => x.ToLower() == route.ToLower());
             if (!string.IsNullOrEmpty(caseSensitiveKey))
-                Routes[caseSensitiveKey] = content;
+                Content[caseSensitiveKey] = content;
             else
-                Routes.Add(route, content);
+                Content.Add(route, content);
 
         }
 
         public void Remove(string route)
         {
-            var caseSensitiveKey = Routes.Select(x => x.Key).FirstOrDefault(x => x.ToLower() == route.ToLower());
+            var caseSensitiveKey = Content.Select(x => x.Key).FirstOrDefault(x => x.ToLower() == route.ToLower());
             if (!string.IsNullOrEmpty(caseSensitiveKey))
-                Routes.Remove(caseSensitiveKey);
-
+                Content.Remove(caseSensitiveKey);
         }
 
+        public string SaveFile(MeekFile file)
+        {
+            file.FileId = Guid.NewGuid().ToString();
+            Files.Add(file.FileId, file);
+            return file.FileId;
+        }
 
-        private IDictionary<string, MeekContent> Routes { get; set; }
+        public MeekFile GetFile(string fileId)
+        {
+            return Files.SingleOrDefault(x => x.Key.ToLower() == fileId.ToLower()).Value;
+        }
+
+        public IEnumerable<string> GetFiles()
+        {
+            return Files.Select(x => x.Value.FileId);
+        }
+
+        private IDictionary<string, MeekFile> Files { get; set; }
+        private IDictionary<string, MeekContent> Content { get; set; }
     }
 }

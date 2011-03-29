@@ -73,6 +73,24 @@ namespace Meek.ContentSite.Features.Definitions
             UxSession.Driver.Navigate().GoToUrl(WebServer.GetUrl("/some/existing/content"));            
         }
 
+        [When(@"I choose a file & press upload")]
+        public void WhenIChooseAFilePressUpload()
+        {
+            var wait = new WebDriverWait(UxSession.Driver, TimeSpan.FromSeconds(5));
+            wait.Until(x => UxSession.Driver.FindElement(By.Id("cke_67")) != null);
+            //for some reason the webdriver click won't work correctly
+            (UxSession.Driver as IJavaScriptExecutor).ExecuteScript("$(\"#cke_67\").click();");
+
+            wait.Until(x => UxSession.Driver.FindElement(By.LinkText("Upload")) != null);
+            UxSession.Driver.FindElement(By.LinkText("Upload")).Click();
+
+            wait.Until(x => UxSession.Driver.FindElement(By.Name("upload")) != null);
+            UxSession.Driver.FindElement(By.Name("upload")).Click();
+
+
+            ScenarioContext.Current.Pending();
+        }
+
         [Then(@"it should present me with a create content link")]
         public void ThenItShouldPresentMeWithACreateContentLink()
         {

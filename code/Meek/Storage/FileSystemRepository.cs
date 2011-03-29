@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -23,11 +24,15 @@ namespace Meek.Storage
             if (element == null)
                 return null;
 
-            var fileName = element.Attribute("fileName").Value;
-            if (!File.Exists(fileName))
+            var filePath = Path.Combine(_baseDir, element.Attribute("fileName").Value);
+            if (!File.Exists(filePath))
                 return null;
 
-            return new MeekContent(element.Attribute("title").Value, File.ReadAllText(fileName),
+            string title = null;
+            if (element.Attribute("title") != null)
+                title = element.Attribute("title").Value;
+
+            return new MeekContent(title, File.ReadAllText(filePath),
                                    bool.Parse(element.Attribute("partial").Value));
 
         }
@@ -60,13 +65,14 @@ namespace Meek.Storage
             string fileKey;
             if (element == null)
             {
-                fileKey = Path.Combine(_baseDir, Guid.NewGuid().ToString());
+                fileKey = Guid.NewGuid().ToString();
 
                 var newElement = new XElement("content");
                 newElement.Add(new XAttribute("route", route));
                 newElement.Add(new XAttribute("fileName", fileKey));
-                newElement.Add(new XAttribute("title", content.Title));
                 newElement.Add(new XAttribute("partial", content.Partial.ToString()));
+                if (!string.IsNullOrEmpty(content.Title))
+                    newElement.Add(new XAttribute("title", content.Title));
 
                 parent.Add(newElement);
             }
@@ -77,8 +83,9 @@ namespace Meek.Storage
                 element.SetAttributeValue("partial", content.Partial.ToString());
             }
 
-            var stream = File.CreateText(fileKey);
-            stream.Write(content.Contents);
+            var stream = File.CreateText(Path.Combine(_baseDir, fileKey));
+            var binaryWriter = new BinaryWriter(stream.BaseStream);
+            binaryWriter.Write(content.Contents, 0, content.Contents.Length);
             stream.Close();
 
             DataFile = parent.Document;
@@ -91,11 +98,64 @@ namespace Meek.Storage
             if (element == null)
                 return;
 
-            File.Delete(element.Attribute("fileName").Value);
+            File.Delete(Path.Combine(_baseDir,element.Attribute("fileName").Value));
             var modifiedDoc = element.Document;
             element.Remove();
             DataFile = modifiedDoc;
         }
+
+        public string SaveFile(MeekFile file)
+        {
+            var parent = DataFile.Element("Meek");
+            var fileKey = Guid.NewGuid().ToString();
+
+            var newElement = new XElement("file");
+            newElement.Add(new XAttribute("fileName", fileKey));
+            newElement.Add(new XAttribute("originalFileName", file.FileName));
+            newElement.Add(new XAttribute("contentType", file.ContentType));
+
+            parent.Add(newElement);
+
+            var stream = File.CreateText(Path.Combine(_baseDir,fileKey));
+            var binaryWriter = new BinaryWriter(stream.BaseStream);
+            binaryWriter.Write(file.Contents, 0, file.Contents.Length);
+            stream.Close();
+
+            DataFile = parent.Document;
+            return fileKey;
+        }
+
+        public MeekFile GetFile(string fileId)
+        {
+            var element = GetFileElement(fileId);
+            if (element == null)
+                return null;
+
+            var filePath = Path.Combine(_baseDir, element.Attribute("fileName").Value);
+            if (!File.Exists(filePath))
+                return null;
+
+            return new MeekFile(fileId, element.Attribute("originalFileName").Value, element.Attribute("contentType").Value,
+                                File.ReadAllBytes(filePath));
+        }
+
+        public IEnumerable<string> GetFiles()
+        {
+            return DataFile.Element("Meek").Elements("file").Select(x => x.Attribute("fileName").Value);
+        }
+
+        public void RemoveFile(string fileId)
+        {
+            var element = GetFileElement(fileId);
+            if (element == null)
+                return;
+
+            File.Delete(Path.Combine(_baseDir, element.Attribute("fileName").Value));
+            var modifiedDoc = element.Document;
+            element.Remove();
+            DataFile = modifiedDoc;
+        }
+
 
         private XDocument DataFile
         {
@@ -134,10 +194,20 @@ namespace Meek.Storage
             return element;
         }
 
+        private XElement GetFileElement(string fileId)
+        {
+            var element = DataFile.Element("Meek").Elements("file").SingleOrDefault(x => x.Attribute("fileName").Value.ToLower() == fileId.ToLower());
+            if (element == null)
+                return null;
+
+            return element;
+        }
+
         private Func<XElement, bool> ByRoute(string route)
         {
             return x => x.Attribute("route").Value.ToLower() == route.ToLower();
         }
+
 
     }
 }

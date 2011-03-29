@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -18,6 +19,7 @@ namespace Meek
 
         readonly Repository _repository;
         readonly Authorization _auth;
+        readonly ImageResizer _resizer;
         readonly Settings _settings;
 
         protected override void OnException(ExceptionContext filterContext)
@@ -29,14 +31,16 @@ namespace Meek
         {
             _repository = BootStrapper.Services.GetRepository();
             _auth = BootStrapper.Services.GetAuthorization();
+            _resizer = BootStrapper.Services.GetImageResizer();
             _settings = BootStrapper.Settings;
         }
 
-        public MeekController(Repository repository, Authorization auth, Settings settings)
+        public MeekController(Repository repository, Authorization auth, ImageResizer resizer, Settings settings)
         {
             _repository = repository;
             _auth = auth;
             _settings = settings;
+            _resizer = resizer;
         }
 
         public ActionResult Manage(string aspxerrorpath, bool partial = false)
@@ -141,10 +145,43 @@ namespace Meek
             return View("CreatePartial", model);
         }
 
-
-        public ActionResult BrowseFiles(string type, string ckEditor, string ckEditorFuncName)
+        public ActionResult GetFile(string id)
         {
-            return View("BrowseFiles");
+            var file = _repository.GetFile(id);
+            if (file == null)
+                return new HttpNotFoundResult();
+
+            return File(file.Contents, file.ContentType, file.FileName);
+        }
+
+        public ActionResult GetFileThumbnail(string id, int width = 125)
+        {
+            var file = _repository.GetFile(id);
+            if (file == null)
+                return new HttpNotFoundResult();
+
+            var img = _resizer.Resize(new Bitmap(new MemoryStream(file.Contents)), 125);
+            var output = new MemoryStream();
+            img.Save(output, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+            return File(output.ToArray(), System.Net.Mime.MediaTypeNames.Image.Jpeg, file.FileName);
+        }
+
+        public ActionResult BrowseFiles(string type, string ckEditor, string ckEditorFuncNum)
+        {
+            
+            return View("BrowseFiles", new BrowseFiles() {Files = _repository.GetFiles(), Callback = ckEditorFuncNum});
+        }
+
+        public ActionResult UploadFile(HttpPostedFileBase upload, string ckEditorFuncNum)
+        {
+            var fileID = _repository.SaveFile(new MeekFile(null, upload.FileName, upload.ContentType, upload.InputStream.ReadFully()));
+            var model = new UploadFileSuccess()
+                            {
+                                Callback = ckEditorFuncNum,
+                                Url = "/Meek/GetFile/" + fileID
+                            };
+            return View("UploadFileSuccess", model);
         }
 
     }

@@ -10,5 +10,6 @@ namespace Meek.Configuration
     {
         Repository GetRepository();
         Authorization GetAuthorization();
+        ImageResizer GetImageResizer();
     }
 }

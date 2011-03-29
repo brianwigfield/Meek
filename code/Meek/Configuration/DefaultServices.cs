@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -35,16 +36,30 @@ namespace Meek.Configuration
             return new BasicAuthorization(isContentAdmin);
         }
 
+        public ImageResizer GetImageResizer()
+        {
+            return DependencyResolver.Current.GetService<ImageResizer>() ?? new DefaultImageResizer();
+        }
+
         private Repository RepositoryFactory()
         {
-            if (_config.Repository.Type == "Sql")
-                return new SQLRepository(_config.Repository.Source);
+            if (_repository == null)
+            {
+                if (_config.Repository.Type == "Sql")
+                    _repository = new SQLRepository(_config.Repository.Source);
 
-            if (_config.Repository.Type == "InMemory")
-                return new InMemoryRepository();
+                if (_config.Repository.Type == "InMemory")
+                    _repository = new InMemoryRepository();
 
-            return null;
+                if (_config.Repository.Type == "FileSystem")
+                    _repository = new FileSystemRepository(Path.Combine(HttpRuntime.AppDomainAppPath, _config.Repository.Source));
+
+            }
+            
+            return _repository;
         }
+
+        Repository _repository;
 
     }
 }

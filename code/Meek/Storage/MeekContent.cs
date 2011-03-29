@@ -4,6 +4,7 @@ namespace Meek.Storage
 {
     public class MeekContent
     {
+        public MeekContent() {}
 
         public MeekContent(string title, byte[] contents, bool partial)
         {

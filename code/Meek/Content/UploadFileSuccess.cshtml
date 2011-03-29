@@ -1,0 +1,8 @@
+﻿@model Meek.Content.UploadFileSuccess
+@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+    window.parent.CKEDITOR.tools.callFunction('@Model.Callback', '@Model.Url', '@Model.Message');
+</script>

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Meek.Storage;
-using Ninject;
+using Microsoft.Practices.Unity;
 
 namespace Meek.ContentSite
 {
@@ -43,13 +42,12 @@ namespace Meek.ContentSite
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
+            var container = new UnityContainer();
+            container.RegisterType<Repository, InMemoryRepository>(new ContainerControlledLifetimeManager());
+            DependencyResolver.SetResolver(new UnityResolver(container));
 
-            var kernel = new StandardKernel();
-            kernel.Bind<Repository>().To<InMemoryRepository>().InSingletonScope();
-            DependencyResolver.SetResolver(new NinjectResolver(kernel));
-
-            //Do this to setup the test data before Initialize() for automated tests using in memory repo
-            SetupRepository(kernel.Get<Repository>());
+            //Do this to setup the test data before Initialize() for automated tests using InMemoryRepository
+            SetupRepository(container.Resolve<Repository>());
 
             BootStrapper.Initialize();
             //Configuration.Configuration.Initialize(repository, new BasicAuthorization(x => x.User.IsInRole("Content Admin")), "Missing");
@@ -64,6 +62,10 @@ namespace Meek.ContentSite
             repository.Save("A/Partial/Page", new MeekContent(null, "Existing partial content", true));
             repository.Save("Partial/For/Edit", new MeekContent(null, "Existing partial content to edit", true));
             repository.Save("Another/Junk/Route", new MeekContent(null, "route table padding", true));
+
+            repository.SaveFile(new MeekFile(null, "PreLoaded", "image/jpeg",
+                                             Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                                                 "Meek.ContentSite.Content.PreLoad.jpg").ReadFully()));
         }
 
     }

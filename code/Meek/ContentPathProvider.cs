@@ -25,7 +25,9 @@ namespace Meek
             _internalResources = new Dictionary<string, string>()
                                     {
                                         {"Manage.cshtml",  "Meek.Content.Manage.cshtml"},
-                                        {"CreatePartial.cshtml", "Meek.Content.CreatePartial.cshtml"}
+                                        {"CreatePartial.cshtml", "Meek.Content.CreatePartial.cshtml"},
+                                        {"BrowseFiles.cshtml", "Meek.Content.BrowseFiles.cshtml"},
+                                        {"UploadFileSuccess.cshtml", "Meek.Content.UploadFileSuccess.cshtml"}
                                     };
 
         }
