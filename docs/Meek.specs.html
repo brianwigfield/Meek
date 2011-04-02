@@ -1,0 +1,980 @@
+<html>
+<head>
+  <title>Machine.Specifications Report</title>
+  <style type="text/css">body {
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: .9em;
+}
+
+.count {
+  color: lightgrey;
+}
+
+.failure, .notimplemented, .ignored {
+  color: red;
+  font-weight: bold;
+  display: inline;
+}
+
+.notimplemented {
+  color: orange;
+}
+
+.ignored {
+  color: gold;
+}
+
+p.exception_type {
+  color: black;
+  font-weight: bold;
+  display: inline;
+}
+
+pre.exception_message {
+  border-style: dashed;
+  border-color: #FF828D;
+  border-width: thin;
+  background-color: #FFD2CF;
+  white-space: pre-wrap; /* CSS2.1 compliant */
+  white-space: -moz-pre-wrap; /* Mozilla-based browsers */
+  white-space: o-pre-wrap; /* Opera 7+ */
+  padding: 1em;
+}
+
+hr {
+  color: lightgrey;
+  border: 1px solid lightgrey;
+  height: 1px;
+}
+
+ul.prev-next {
+  padding: 0;
+  margin: 0;
+  font-size: 2em;
+  }
+  
+.spec ul.prev-next {
+  float: right;
+  right: 30%;
+  position: absolute;
+  margin-top: -1em;
+  }
+
+ul.prev-next li {
+  display: inline;
+  padding: 0;
+  margin: 0;
+}
+
+ul.prev-next li a {
+  color: lightgrey;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0 .3em;
+  border: 1px solid lightgrey;
+}
+
+ul.prev-next li.failure a {
+  border-color: red;
+}
+
+ul.prev-next li.notimplemented a {
+  border-color: orange;
+}
+
+ul.prev-next li.ignored a {
+  border-color: gold;
+}
+
+ul.prev-next li.failure a:hover {
+  background-color: red;
+  color: #fff;
+}
+
+ul.prev-next li.notimplemented a:hover {
+  background-color: orange;
+  color: #000;
+}
+
+ul.prev-next li.ignored a:hover {
+  background-color: gold;
+  color: #000;
+}
+
+ul.prev-next li.back a:hover {
+  background-color: #444;
+  color: #fff;
+}
+
+div.supplement {
+  display: none;
+}
+  
+@media print {
+  ul.prev-next {
+    display: none;
+  }
+}
+  </style>
+</head>
+<body>
+  <ul class="prev-next">
+  </ul>
+<h1>
+    Meek.Specs
+</h1>
+<h2 class="count">
+  1 concern,
+  41 contexts,
+  72 specifications
+</h2>
+
+  <hr/>
+  <hr/>
+<h2 class="concern">
+   specifications
+</h2>
+<h3 class="count">
+  41 contexts, 72 specifications
+</h3><h3 class="context">
+  When a content admin asks for a non existent page
+</h3>
+<h4 class="count">
+  3 specifications
+</h4><ul><li class="spec"><span id="2">Should check the repository</span>
+
+
+
+
+
+<script type="text/javascript">
+  function toggleVisibility(id, description)
+  {
+    var section = document.getElementById(id);
+    var link = document.getElementById(id + "_link");
+
+    if (section.style.display == "block")
+    {
+      section.style.display = "none";
+      link.innerHTML = "Show " + description;
+    } else
+    {
+      section.style.display = "block";
+      link.innerHTML = "Hide " + description;
+    }
+  };
+</script> 
+
+          </li><li class="spec"><span id="3">Should present a blank add content screen</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="4">Should auto populate the url field</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When a content admin asks to delete an existing page
+</h3>
+<h4 class="count">
+  3 specifications
+</h4><ul><li class="spec"><span id="7">Should delete from storage</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="8">Should remove the route</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="9">Should redirect to the homepage</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When a content admin asks to edit an existing page
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="5">Should present a edit content screen</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="6">Should populate the form with the existing data</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When a content admin enters page content
+</h3>
+<h4 class="count">
+  3 specifications
+</h4><ul><li class="spec"><span id="10">Should save the content</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="11">Should redirect them to the new content</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="12">Should have the route registered</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When a content admin enters page content with empty title and content
+</h3>
+<h4 class="count">
+  3 specifications
+</h4><ul><li class="spec"><span id="21">Should save the content</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="22">Should redirect them to the new content</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="23">Should have the route registered</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When a content admin enters page content without a url
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="14">Should return the form with an error</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="15">Should return an error</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When a content admin enters partial page content
+</h3>
+<h4 class="count">
+  3 specifications
+</h4><ul><li class="spec"><span id="16">Should save the content</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="17">Should redirect them to the homepage</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="18">Should have the route registered</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When a non content admin asks to manage pages
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="19">Should return a not found view</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="20">Should return a 404 status</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When a non content admin enters page content
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="13">Should return a 403 result</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking for all routes
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="45">Should return only full routes</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking for all routes
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="56">Should return only full routes</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking for all routes
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="68">Should return only full routes</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking for an image
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="28">Should return the file</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking for an image thumbnail
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="29">Should use the resizer for the image</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="30">Should return the file</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking for full routes
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="43">Should return only full routes</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking for full routes
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="54">Should return only full routes</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking for full routes
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="66">Should return only full routes</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking for partial routes
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="44">Should return only full routes</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking for partial routes
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="55">Should return only full routes</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking for partial routes
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="67">Should return only full routes</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking to browse image files
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="49">Should return the list of images in storage</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking to browse image files
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="60">Should return the list of images in storage</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking to browse image files
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="72">Should return the list of images in storage</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When asking to browse images
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="26">Should return a list of images</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="27">Should return a callback</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When checking for meek content
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="31">Should use the meek storage</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="32">Should say it exists</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When checking for non meek content
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="37">Should not use the meek storage</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When checking the schema of a database that does not have meek setup
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="61">Should create the tables for use</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When deleting content
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="46">Should not contain the route anymore</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When deleting content
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="57">Should not contain the route anymore</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When deleting content
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="69">Should not contain the route anymore</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When resizing an image
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="1">should be the correct size</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When retrieving meek content
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="33">Should use the meek storage</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="34">Should return the content</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When retrieving meek manager page
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="35">Should not use the meek storage</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="36">Should return the content</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When retrieving non meek content
+</h3>
+<h4 class="count">
+  1 specification
+</h4><ul><li class="spec"><span id="38">Should not use the meek storage</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When saving a file to storage
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="47">Should allow it to be retrived case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="48">Should generate a file id</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When saving a file to storage
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="58">Should allow it to be retrived case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="59">Should generate a file id</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When saving a file to storage
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="70">Should allow it to be retrived case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="71">Should generate a file id</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When saving content to storage
+</h3>
+<h4 class="count">
+  4 specifications
+</h4><ul><li class="spec"><span id="39">Should allow it to be retrived case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="40">Should report it as existing case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="41">Should save keys case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="42">Should return it in route list</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When saving content to storage
+</h3>
+<h4 class="count">
+  4 specifications
+</h4><ul><li class="spec"><span id="50">Should allow it to be retrived case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="51">Should report it as existing case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="52">Should save keys case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="53">Should return it in route list</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When saving content to storage
+</h3>
+<h4 class="count">
+  4 specifications
+</h4><ul><li class="spec"><span id="62">Should allow it to be retrived case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="63">Should report it as existing case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="64">Should save keys case insensitive</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="65">Should return it in route list</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul><h3 class="context">
+  When uploading an image
+</h3>
+<h4 class="count">
+  2 specifications
+</h4><ul><li class="spec"><span id="24">Should save the image to storage</span>
+
+
+
+
+
+ 
+
+          </li><li class="spec"><span id="25">Should return a ckeditor callback</span>
+
+
+
+
+
+ 
+
+          </li>
+        </ul>
+    <hr/>
+</body>
+</html>

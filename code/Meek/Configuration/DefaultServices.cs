@@ -30,7 +30,7 @@ namespace Meek.Configuration
                 return auth;
 
             Func<HttpContextBase, bool> isContentAdmin = x => true;
-            if (_config.ContentAdmin != null)
+            if (_config.ContentAdmin != null && _config.ContentAdmin.Count > 0)
                 isContentAdmin = x => _config.ContentAdmin.OfType<MeekConfigurationSection.RoleElement>().Any(s => x.User.IsInRole(s.Role));
 
             return new BasicAuthorization(isContentAdmin);
@@ -46,7 +46,10 @@ namespace Meek.Configuration
             if (_repository == null)
             {
                 if (_config.Repository.Type == "Sql")
+                {
                     _repository = new SQLRepository(_config.Repository.Source);
+                    (_repository as SQLRepository).EnsureSchema();
+                }
 
                 if (_config.Repository.Type == "InMemory")
                     _repository = new InMemoryRepository();

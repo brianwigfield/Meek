@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>Meek</id>
+    <version>0.5</version>
+    <authors>Brian Wigfield</authors>
+    <owners>AdventureTech</owners>
+    <projectUrl>http://www.adventuretechgroup.com/labs/meeek</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An unobtrusive CMS system designed to bolt on to an existing MVC3 Razor web app. Includes image uploading and wiki style editing.</description>
+    <tags>CMS MVC3 Razor CKEditor</tags>
+    
+    <dependencies>
+      <dependency id="WebActivator" version="1.4" />
+    </dependencies>
+    
+  </metadata>
+</package>

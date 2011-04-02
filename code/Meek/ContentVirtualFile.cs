@@ -27,7 +27,7 @@ namespace Meek
         public override Stream Open()
         {
             var content = _repository.Get(_pathKey);
-            var contentMarkup = new UTF8Encoding().GetString(content.Contents);
+            var contentMarkup = content.Contents;
 
             var httpContext = HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current);
 
@@ -39,7 +39,7 @@ namespace Meek
                                                    , content.Title
                                                    , contentMarkup);
             
-            return new MemoryStream(new UTF8Encoding().GetBytes(constructedContent));
+            return new MemoryStream(Encoding.UTF8.GetBytes(constructedContent));
         }
 
         private string AddEditLinkMarkup(string content, bool partial)

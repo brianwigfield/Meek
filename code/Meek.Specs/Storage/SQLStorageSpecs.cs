@@ -10,6 +10,24 @@ using Meek.Storage;
 
 namespace Meek.Specs.Storage.SQL
 {
+
+    public class When_checking_the_schema_of_a_database_that_does_not_have_meek_setup : WithSubject<SQLRepository>
+    {
+
+        Establish that = () =>
+            Subject = new SQLRepository("EmptyDatabase");
+
+        Because of = () =>
+            Subject.EnsureSchema();
+
+        It Should_create_the_tables_for_use = () =>
+            {
+                var ex = Catch.Exception(() => Subject.AvailableRoutes(null));
+                ex.ShouldBeNull();
+            };
+
+    }
+
     public class When_saving_content_to_storage : WithSubject<SQLRepository>
     {
         Establish that = () =>

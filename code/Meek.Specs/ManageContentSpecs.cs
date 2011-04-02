@@ -251,4 +251,34 @@ namespace Meek.Specs
 
     }
 
+    public class When_a_content_admin_enters_page_content_with_empty_title_and_content : WithSubject<MeekController>
+    {
+        Establish that = () =>
+                               The<Authorization>()
+                                    .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+                                    .Return(true);
+
+        Because of = () =>
+                         _result =
+                         Subject.Manage(new Content.Manage()
+                         {
+                             ManageUrl = "a/bogus/url",
+                             ContentTitle = null,
+                             Partial = false,
+                             EditorContents = null
+                         });
+
+
+        It Should_save_the_content = () =>
+             The<Repository>().WasToldTo(x => x.Save(GivenIt.IsAny<string>(), GivenIt.IsAny<MeekContent>())).OnlyOnce();
+
+        It Should_redirect_them_to_the_new_content = () =>
+             _result.AssertHttpRedirect().ToUrl("/a/bogus/url");
+
+        It Should_have_the_route_registered = () =>
+             RouteTable.Routes.Cast<MeekRoute>().FirstOrDefault(x => x.Url == "a/bogus/url").ShouldNotBeNull();
+
+        static ActionResult _result;
+    }
+
 }

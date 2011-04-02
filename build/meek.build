@@ -1,0 +1,42 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+
+  <PropertyGroup>
+    <RunSpecsCommand>
+      ..\code\packages\Machine.Specifications.0.4.8.0\tools\mspec-clr4.exe $(AdditionalSettings) ..\code\Meek.specs\bin\Release\Meek.specs.dll --html ../docs/Meek.specs.html
+	  </RunSpecsCommand>
+    <NugetPackCommand>
+      nuget\NuGet.exe pack ../nuget/meek.nuspec -OutputDirectory output 
+	  </NugetPackCommand>	  
+  </PropertyGroup>
+
+  <Target Name="Build">
+    <Message Text="Building Online Testing Application" />
+    <MSBuild Projects="..\code\Meek.sln" Properties="Configuration=Release;WarningLevel=2;" />
+    <CallTarget Targets="RunSpecs" />
+    <CallTarget Targets="CopyToOutput" />
+    <CallTarget Targets="NugetPack" />
+  </Target>
+
+  <Target Name="RunSpecs">
+    <Message Text="Running Specifications using: $(RunSpecsCommand)" />
+    <Exec Command="$(RunSpecsCommand)" />
+  </Target>
+
+  <Target Name="NugetPack">
+    <Message Text="Preparing Nuget package using: $(NugetPackCommand)" />
+    <Exec Command="$(NugetPackCommand)" />
+  </Target>
+
+  <Target Name="CopyToOutput">
+    <ItemGroup>
+      <FilesToPublish Include="..\code\Meek\bin\release\*.dll" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(FilesToPublish)"
+      DestinationFolder="..\nuget\lib\net40\" ></Copy>
+    <Copy
+      SourceFiles="@(FilesToPublish)"
+      DestinationFolder="output" ></Copy>
+  </Target>
+  
+</Project>

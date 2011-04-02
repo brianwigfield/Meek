@@ -3,7 +3,7 @@
 namespace Meek.Configuration
 {
 
-    class MeekConfigurationSection : ConfigurationSection
+    public class MeekConfigurationSection : ConfigurationSection
     {
 
         [ConfigurationProperty("repository", IsRequired=true)]

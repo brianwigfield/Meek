@@ -93,14 +93,14 @@ namespace Meek
                                                    new RouteValueDictionary(new { controller = "Meek", action = "BogusAction" /* if not here it will mess up the ActionLink HtmlHelper method since its not a named route (MVC bug?) */ }),
                                                    new CkEditorRouteHandler()));
 
-            Settings.NotFoundView = string.IsNullOrEmpty(settings.NotFoundView) ? "NotFound" : settings.NotFoundView;
+            Settings.NotFoundView = settings.NotFoundView;
 
 
             HostingEnvironment.RegisterVirtualPathProvider(new ContentPathProvider(HostingEnvironment.VirtualPathProvider, Services));
         }
 
-        internal static Settings Settings { get; set; }
-        internal static Services Services { get; set; }
+        public static Settings Settings { get; internal set; }
+        public static Services Services { get; internal set; }
 
     }
 }

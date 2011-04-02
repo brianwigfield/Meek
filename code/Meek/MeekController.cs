@@ -47,7 +47,10 @@ namespace Meek
         {
             if (!_auth.IsContentAdmin(HttpContext))
             {
-                return new HttpNotFoundViewResult(_settings.NotFoundView);
+                if (string.IsNullOrEmpty(_settings.NotFoundView))
+                    return new HttpNotFoundResult();
+                else
+                    return new HttpNotFoundViewResult(_settings.NotFoundView);
             }
 
             ViewBag.CkEditorPath = _settings.CkEditorPath + "/ckeditor.js";
@@ -60,7 +63,7 @@ namespace Meek
             {
                 var existingContent = _repository.Get(model.ManageUrl);
                 model.ContentTitle = existingContent.Title;
-                model.EditorContents = Encoding.UTF8.GetString(existingContent.Contents);
+                model.EditorContents = existingContent.Contents;
                 model.Partial = existingContent.Partial;
             }
             else
@@ -74,7 +77,7 @@ namespace Meek
         [HttpPost]
         [ValidateInput(false)]
         [AcceptParameter(Name = "submit", Value = "save")]
-        public ActionResult Manage(Content.Manage model)
+        public ActionResult Manage(Manage model)
         {
             if (!_auth.IsContentAdmin(HttpContext))
                 return new HttpStatusCodeResult(403);

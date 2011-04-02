@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Meek.Storage
@@ -25,6 +26,32 @@ namespace Meek.Storage
 
             _factory = DbProviderFactories.GetFactory(connectionString.ProviderName);
             _connectString = connectionString.ConnectionString;
+        }
+
+        public void EnsureSchema()
+        {
+            using (var conn = OpenConnection())
+            {
+                var command = _factory.CreateCommand();
+                command.Connection = conn;
+                command.CommandText = "select case when exists((select * from information_schema.tables where table_name = 'MeekContent')) then 1 else 0 end";
+                var tablesExist = (int) command.ExecuteScalar() == 1;
+
+                if (tablesExist)
+                    return;
+
+                var schemaScripts =
+                    Encoding.UTF8.GetString(
+                        Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Storage.CreateSchema.txt").
+                            ReadFully()).Split(new[] {"GO"}, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var schemaScript in schemaScripts)
+                {
+                    command.CommandText = schemaScript;
+                    command.ExecuteNonQuery();
+                }
+
+            }
         }
 
         public MeekContent Get(string route)
@@ -111,7 +138,7 @@ namespace Meek.Storage
                     AddParam(command, SqlDbType.NVarChar, content.Title, "Title");
 
                 AddParam(command, SqlDbType.Bit, content.Partial, "Partial");
-                AddParam(command, SqlDbType.NVarChar, new UTF8Encoding().GetString(content.Contents), "Data");
+                AddParam(command, SqlDbType.NVarChar, content.Contents, "Data");
 
                 command.ExecuteNonQuery();
             }

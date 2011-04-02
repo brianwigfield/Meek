@@ -85,7 +85,8 @@ namespace Meek.Storage
 
             var stream = File.CreateText(Path.Combine(_baseDir, fileKey));
             var binaryWriter = new BinaryWriter(stream.BaseStream);
-            binaryWriter.Write(content.Contents, 0, content.Contents.Length);
+            var contentBytes = Encoding.UTF8.GetBytes(content.Contents);
+            binaryWriter.Write(contentBytes, 0, contentBytes.Length);
             stream.Close();
 
             DataFile = parent.Document;
