@@ -4,7 +4,7 @@
     <section name="meek" type="Meek.Configuration.MeekConfigurationSection, Meek" requirePermission="false"/>
   </configSections>
   
-  <meek altManageContentRoute="Missing" notFoundView="NotFound">
+  <meek altManageContentRoute="Missing">
     <repository type="InMemory"/>
   </meek>
   

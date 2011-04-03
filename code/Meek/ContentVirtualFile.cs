@@ -19,7 +19,7 @@ namespace Meek
         public ContentVirtualFile(Repository repository, string requestedPath, string pathKey, Authorization auth)
             : base(requestedPath)
         {
-            _pathKey = pathKey.Replace(".cshtml", string.Empty).Replace(".vbhtml", string.Empty);
+            _pathKey = pathKey.Replace(".cshtml", string.Empty);
             _repository = repository;
             _auth = auth;
         }

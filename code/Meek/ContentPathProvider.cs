@@ -44,7 +44,7 @@ namespace Meek
                     return true;
 
                 var repository = _services.GetRepository();
-                exists = repository.Exists(TranslateVirtualPath(virtualPath).Replace(".cshtml", string.Empty).Replace(".vbhtml", string.Empty));
+                exists = repository.Exists(TranslateVirtualPath(virtualPath).Replace(".cshtml", string.Empty));
             }
             return exists;
         }
@@ -58,7 +58,7 @@ namespace Meek
                 return GetInternalResource(virtualPath);
 
             var repository = _services.GetRepository();
-            if (IsMeekPath(virtualPath) && repository.Exists(TranslateVirtualPath(virtualPath).Replace(".cshtml", string.Empty).Replace(".vbhtml", string.Empty)))
+            if (IsMeekPath(virtualPath) && repository.Exists(TranslateVirtualPath(virtualPath).Replace(".cshtml", string.Empty)))
                 return new ContentVirtualFile(repository, virtualPath, TranslateVirtualPath(virtualPath), _services.GetAuthorization());
 
             return null;
