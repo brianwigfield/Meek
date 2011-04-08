@@ -88,7 +88,7 @@ namespace Meek.Specs
         Establish that = () =>
             The<Repository>()
                 .WhenToldTo(x => x.GetFile("test"))
-                .Return(new MeekFile("test", "blah.jpg", "image/jpeg", new byte[0]));
+                .Return(new MeekFile("blah.jpg", "image/jpeg", new byte[0]));
 
         Because of = () =>
             _result = Subject.GetFile("test");
@@ -109,7 +109,7 @@ namespace Meek.Specs
             {
                 The<Repository>()
                     .WhenToldTo(x => x.GetFile("test"))
-                    .Return(new MeekFile("test", "blah.jpg", "image/jpeg", Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Specs.UploadFile.jpg").ReadFully()));
+                    .Return(new MeekFile("blah.jpg", "image/jpeg", Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Specs.UploadFile.jpg").ReadFully()));
 
                 The<ImageResizer>()
                     .WhenToldTo(x => x.Resize(GivenIt.IsAny<Image>(), 125))

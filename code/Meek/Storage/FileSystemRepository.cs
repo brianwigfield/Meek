@@ -136,7 +136,7 @@ namespace Meek.Storage
             if (!File.Exists(filePath))
                 return null;
 
-            return new MeekFile(fileId, element.Attribute("originalFileName").Value, element.Attribute("contentType").Value,
+            return new MeekFile(element.Attribute("originalFileName").Value, element.Attribute("contentType").Value,
                                 File.ReadAllBytes(filePath));
         }
 

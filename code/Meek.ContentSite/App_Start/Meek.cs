@@ -35,7 +35,7 @@ namespace Meek.ContentSite.App_Start
             repository.Save("Partial/For/Edit", new MeekContent(null, "Existing partial content to edit", true));
             repository.Save("Another/Junk/Route", new MeekContent(null, "route table padding", true));
 
-            repository.SaveFile(new MeekFile(null, "PreLoaded", "image/jpeg",
+            repository.SaveFile(new MeekFile("PreLoaded", "image/jpeg",
                                              Assembly.GetExecutingAssembly().GetManifestResourceStream(
                                                  "Meek.ContentSite.Content.PreLoad.jpg").ReadFully()));
         }

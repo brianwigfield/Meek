@@ -190,7 +190,7 @@ namespace Meek.Storage
                 if (!reader.Read())
                     return null;
 
-                return new MeekFile(fileId, reader.GetString(0), reader.GetString(1), (byte[])reader.GetValue(2));
+                return new MeekFile(reader.GetString(0), reader.GetString(1), (byte[])reader.GetValue(2));
                
             }
         }

@@ -69,6 +69,7 @@
     <Compile Include="PathProviderSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\FileSystemStorageSpecs.cs" />
+    <Compile Include="Storage\MongoDbSpecs.cs" />
     <Compile Include="Storage\SQLStorageSpecs.cs" />
     <Compile Include="Storage\InMemoryStorageSpecs.cs" />
   </ItemGroup>
@@ -77,6 +78,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Meek.MongoDb\Meek.MongoDb.csproj">
+      <Project>{BD74E7AD-266F-4F53-A3D2-BB161563C1AE}</Project>
+      <Name>Meek.MongoDb</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Meek\Meek.csproj">
       <Project>{045A9B80-6DE1-4A31-AE04-81163093C492}</Project>
       <Name>Meek</Name>

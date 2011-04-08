@@ -143,7 +143,9 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -152,6 +154,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Meek.MongoDb\Meek.MongoDb.csproj">
+      <Project>{BD74E7AD-266F-4F53-A3D2-BB161563C1AE}</Project>
+      <Name>Meek.MongoDb</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Meek\Meek.csproj">
       <Project>{045A9B80-6DE1-4A31-AE04-81163093C492}</Project>
       <Name>Meek</Name>

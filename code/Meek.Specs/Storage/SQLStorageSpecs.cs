@@ -136,7 +136,7 @@ namespace Meek.Specs.Storage.SQL
            Subject = new SQLRepository("TestDatabase");
 
         Because of = () =>
-            _fileId = Subject.SaveFile(new MeekFile(null, "Test.jpg", "image/jpeg", _fileData));
+            _fileId = Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg", _fileData));
 
         It Should_allow_it_to_be_retrived_case_insensitive = () =>
         {
@@ -149,7 +149,7 @@ namespace Meek.Specs.Storage.SQL
         };
 
         It Should_generate_a_file_id = () =>
-            Subject.GetFile(_fileId.ToLower()).FileId.ShouldNotBeEmpty();
+            _fileId.ShouldNotBeEmpty();
 
         Cleanup The_records_from_storage = () => 
             Subject.RemoveFile(_fileId);
@@ -165,13 +165,13 @@ namespace Meek.Specs.Storage.SQL
             {
                 Subject = new SQLRepository("TestDatabase");
 
-                Subject.SaveFile(new MeekFile("1", "Test.jpg", "image/jpeg",
+                Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg",
                                               Assembly.GetExecutingAssembly().GetManifestResourceStream(
                                                   "Meek.Specs.UploadFile.jpg").ReadFully()));
-                Subject.SaveFile(new MeekFile("2", "Test.jpg", "image/jpeg",
+                Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg",
                                               Assembly.GetExecutingAssembly().GetManifestResourceStream(
                                                   "Meek.Specs.UploadFile.jpg").ReadFully()));
-                Subject.SaveFile(new MeekFile("3", "Test.jpg", "image/jpeg",
+                Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg",
                                               Assembly.GetExecutingAssembly().GetManifestResourceStream(
                                                   "Meek.Specs.UploadFile.jpg").ReadFully()));
             };

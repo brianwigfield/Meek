@@ -58,9 +58,9 @@ namespace Meek.Storage
 
         public string SaveFile(MeekFile file)
         {
-            file.FileId = Guid.NewGuid().ToString();
-            Files.Add(file.FileId, file);
-            return file.FileId;
+            var fileId = Guid.NewGuid().ToString();
+            Files.Add(fileId, file);
+            return fileId;
         }
 
         public MeekFile GetFile(string fileId)
@@ -70,7 +70,7 @@ namespace Meek.Storage
 
         public IEnumerable<string> GetFiles()
         {
-            return Files.Select(x => x.Value.FileId);
+            return Files.Select(x => x.Key);
         }
 
         private IDictionary<string, MeekFile> Files { get; set; }

@@ -178,7 +178,7 @@ namespace Meek
 
         public ActionResult UploadFile(HttpPostedFileBase upload, string ckEditorFuncNum)
         {
-            var fileID = _repository.SaveFile(new MeekFile(null, upload.FileName, upload.ContentType, upload.InputStream.ReadFully()));
+            var fileID = _repository.SaveFile(new MeekFile(upload.FileName, upload.ContentType, upload.InputStream.ReadFully()));
             var model = new UploadFileSuccess()
                             {
                                 Callback = ckEditorFuncNum,
