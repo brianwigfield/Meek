@@ -13,12 +13,12 @@ using System.Text;
 namespace Meek.Storage
 {
 
-    public class SQLRepository : Repository
+    public class SqlRepository : Repository
     {
         readonly DbProviderFactory _factory;
         readonly string _connectString;
 
-        public SQLRepository(string connectionStringName)
+        public SqlRepository(string connectionStringName)
         {
             var connectionString = ConfigurationManager.ConnectionStrings[connectionStringName];
             if (connectionString == null)
@@ -42,7 +42,7 @@ namespace Meek.Storage
 
                 var schemaScripts =
                     Encoding.UTF8.GetString(
-                        Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Storage.CreateSchema.txt").
+                        Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Storage.CreateSchema.sql").
                             ReadFully()).Split(new[] {"GO"}, StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (var schemaScript in schemaScripts)

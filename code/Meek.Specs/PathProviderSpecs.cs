@@ -117,7 +117,7 @@ namespace Meek.Specs
             _repo.Setup(x => x.Exists(Moq.It.IsAny<string>())).Returns(true);
             _repo.Setup(x => x.Get(Moq.It.IsAny<string>())).Returns(new MeekContent("title", "contents", false));
             var auth = new Mock<Authorization>();
-            var services = new Mock<Services>();
+            var services = new Mock<Configuration.Configuration>();
             services.Setup(x => x.GetRepository()).Returns(_repo.Object);
             services.Setup(x => x.GetAuthorization()).Returns(auth.Object);
             auth.Setup(x => x.IsContentAdmin(Moq.It.IsAny<HttpContextBase>())).Returns(true);

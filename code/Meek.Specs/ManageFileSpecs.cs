@@ -28,8 +28,8 @@ namespace Meek.Specs
                 _file.Setup(x => x.ContentType).Returns("image/jpeg");
                 _file.Setup(x => x.InputStream).Returns(Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Specs.UploadFile.jpg"));
 
-                The<Repository>()
-                    .WhenToldTo(x => x.SaveFile(GivenIt.IsAny<MeekFile>()))
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetRepository().SaveFile(GivenIt.IsAny<MeekFile>()))
                     .Return("qwerty");
             };
 
@@ -38,7 +38,7 @@ namespace Meek.Specs
             _result = Subject.UploadFile(_file.Object, "callback");
 
         It Should_save_the_image_to_storage = () =>
-            The<Repository>().WasToldTo(x => x.SaveFile(GivenIt.IsAny<MeekFile>()));
+            The<Configuration.Configuration>().WasToldTo(x => x.GetRepository().SaveFile(GivenIt.IsAny<MeekFile>()));
 
         It Should_return_a_ckeditor_callback = () =>
             {
@@ -57,8 +57,8 @@ namespace Meek.Specs
     {
 
         Establish that = () =>
-            The<Repository>()
-                .WhenToldTo(x => x.GetFiles())
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetRepository().GetFiles())
                 .Return(new List<string>()
                             {
                                 "one",
@@ -86,8 +86,8 @@ namespace Meek.Specs
     {
 
         Establish that = () =>
-            The<Repository>()
-                .WhenToldTo(x => x.GetFile("test"))
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetRepository().GetFile("test"))
                 .Return(new MeekFile("blah.jpg", "image/jpeg", new byte[0]));
 
         Because of = () =>
@@ -107,12 +107,12 @@ namespace Meek.Specs
 
         Establish that = () =>
             {
-                The<Repository>()
-                    .WhenToldTo(x => x.GetFile("test"))
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetRepository().GetFile("test"))
                     .Return(new MeekFile("blah.jpg", "image/jpeg", Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Specs.UploadFile.jpg").ReadFully()));
 
-                The<ImageResizer>()
-                    .WhenToldTo(x => x.Resize(GivenIt.IsAny<Image>(), 125))
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetImageResizer().Resize(GivenIt.IsAny<Image>(), 125))
                     .Return(new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Specs.UploadFile.jpg")));
 
             };
@@ -122,8 +122,8 @@ namespace Meek.Specs
             _result = Subject.GetFileThumbnail("test", 125);
 
         It Should_use_the_resizer_for_the_image = () =>
-            The<ImageResizer>()
-                .WasToldTo(x => x.Resize(GivenIt.IsAny<Image>(), 125));
+            The<Configuration.Configuration>()
+                .WasToldTo(x => x.GetImageResizer().Resize(GivenIt.IsAny<Image>(), 125));
 
         It Should_return_the_file = () =>
         {

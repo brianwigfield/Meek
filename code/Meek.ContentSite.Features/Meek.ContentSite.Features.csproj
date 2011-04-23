@@ -87,6 +87,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ImageUploading.feature</DependentUpon>
     </Compile>
+    <Compile Include="ManageByList.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ManageByList.feature</DependentUpon>
+    </Compile>
     <Compile Include="PartialContent.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -118,6 +123,10 @@
     <None Include="ImageUploading.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ImageUploading.feature.cs</LastGenOutput>
+    </None>
+    <None Include="ManageByList.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ManageByList.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
     <None Include="PartialContent.feature">

@@ -91,6 +91,12 @@ namespace Meek.ContentSite.Features.Definitions
             ScenarioContext.Current.Pending();
         }
 
+        [When(@"I press navigate to the list page")]
+        public void WhenIPressNavigateToTheListPage()
+        {
+            UxSession.Driver.Navigate().GoToUrl(WebServer.GetUrl("/Meek/List"));
+        }
+
         [Then(@"it should present me with a create content link")]
         public void ThenItShouldPresentMeWithACreateContentLink()
         {
@@ -239,6 +245,16 @@ namespace Meek.ContentSite.Features.Definitions
             UxSession.Driver.Navigate().GoToUrl(WebServer.GetUrl("/content/for/delete"));
             wait.Until(x => x.Url == WebServer.GetUrl("/Missing", "aspxerrorpath=/content/for/delete"));
 
+        }
+
+        [Then(@"the it should show a list of links")]
+        public void ThenTheItShouldShowAListOfLinks()
+        {
+            var wait = new WebDriverWait(UxSession.Driver, TimeSpan.FromSeconds(5));
+            wait.Until(x => UxSession.Driver.FindElement(By.LinkText("/content/for/edit")) != null);
+
+            UxSession.Driver.FindElement(By.LinkText("/content/for/edit")).Click();
+            wait.Until(x => UxSession.Driver.Title == "Manage content");
         }
 
     }

@@ -21,20 +21,21 @@ namespace Meek.Specs
     {
         Establish that = () =>
             {
-                The<Authorization>()
-                    .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
                     .Return(true);
 
-                The<Repository>()
-                    .WhenToldTo(x => x.Exists("a/bogus/url"))
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetRepository().Exists("a/bogus/url"))
                     .Return(false);
+
             };
 
         Because of = () =>
             _result = Subject.Manage("/a/bogus/url");
 
         It Should_check_the_repository = () =>
-            The<Repository>().WasToldTo(x => x.Exists("a/bogus/url")).OnlyOnce();
+            The<Configuration.Configuration>().WasToldTo(x => x.GetRepository().Exists("a/bogus/url")).OnlyOnce();
 
         It Should_present_a_blank_add_content_screen = () =>
             _result.AssertViewRendered().ForView("Manage");
@@ -49,16 +50,16 @@ namespace Meek.Specs
     {
         Establish that = () =>
         {
-            The<Authorization>()
-                .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
                 .Return(true);
 
-            The<Repository>()
-                .WhenToldTo(x => x.Exists("existing/route"))
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetRepository().Exists("existing/route"))
                 .Return(true);
 
-            The<Repository>()
-                .WhenToldTo(x => x.Get("existing/route"))
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetRepository().Get("existing/route"))
                 .Return(new MeekContent("a title", "some content", true));
 
         };
@@ -85,12 +86,12 @@ namespace Meek.Specs
     {
         Establish that = () =>
         {
-            The<Authorization>()
-                .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
                 .Return(true);
 
-            The<Repository>()
-                .WhenToldTo(x => x.Remove("existing/route"));
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetRepository().Remove("existing/route"));
 
             RouteTable.Routes.Add(new MeekRoute("existing/route"));
         };
@@ -99,8 +100,8 @@ namespace Meek.Specs
             _result = Subject.Delete("existing/route");
 
         It Should_delete_from_storage = () =>
-            The<Repository>()
-                .WasToldTo(x => x.Remove("existing/route"));
+            The<Configuration.Configuration>()
+                .WasToldTo(x => x.GetRepository().Remove("existing/route"));
 
         It Should_remove_the_route = () =>
             RouteTable.Routes.Cast<MeekRoute>().FirstOrDefault(x => x.Url == "existing/route").ShouldBeNull();
@@ -115,23 +116,28 @@ namespace Meek.Specs
     public class When_a_content_admin_enters_page_content : WithSubject<MeekController>
     {
         Establish that = () =>
-                         The<Authorization>()
-                             .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
-                             .Return(true);
+            {
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+                    .Return(true);
+
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetRepository().Save(GivenIt.IsAny<string>(), GivenIt.IsAny<MeekContent>()));
+            };
 
         Because of = () =>
-                     _result =
-                     Subject.Manage(new Content.Manage()
-                                        {
-                                            ManageUrl = "a/bogus/url",
-                                            ContentTitle = "a title",
-                                            Partial = false,
-                                            EditorContents = "some content"
-                                        });
+            _result =
+            Subject.Manage(new Content.Manage()
+                            {
+                                ManageUrl = "a/bogus/url",
+                                ContentTitle = "a title",
+                                Partial = false,
+                                EditorContents = "some content"
+                            });
 
 
         It Should_save_the_content = () =>
-            The<Repository>().WasToldTo(x => x.Save(GivenIt.IsAny<string>(), GivenIt.IsAny<MeekContent>())).OnlyOnce();
+            The<Configuration.Configuration>().WasToldTo(x => x.GetRepository().Save(GivenIt.IsAny<string>(), GivenIt.IsAny<MeekContent>())).OnlyOnce();
 
         It Should_redirect_them_to_the_new_content = () =>
             _result.AssertHttpRedirect().ToUrl("/a/bogus/url");
@@ -145,19 +151,19 @@ namespace Meek.Specs
     public class When_a_non_content_admin_enters_page_content : WithSubject<MeekController>
     {
         Establish that = () =>
-                         The<Authorization>()
-                             .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
-                             .Return(false);
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+                .Return(false);
 
         Because of = () =>
-                     _result =
-                     Subject.Manage(new Content.Manage()
-                                        {
-                                            ManageUrl = "a/bogus/url",
-                                            ContentTitle = "a title",
-                                            Partial = false,
-                                            EditorContents = "some content"
-                                        });
+            _result =
+            Subject.Manage(new Content.Manage()
+                            {
+                                ManageUrl = "a/bogus/url",
+                                ContentTitle = "a title",
+                                Partial = false,
+                                EditorContents = "some content"
+                            });
 
 
         It Should_return_a_403_result = () =>
@@ -169,19 +175,19 @@ namespace Meek.Specs
     public class When_a_content_admin_enters_page_content_without_a_url : WithSubject<MeekController>
     {
         Establish that = () =>
-                         The<Authorization>()
-                             .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
-                             .Return(true);
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+                .Return(true);
 
         Because of = () =>
-                     _result =
-                     Subject.Manage(new Content.Manage()
-                     {
-                         ManageUrl = string.Empty,
-                         ContentTitle = "a title",
-                         Partial = false,
-                         EditorContents = "some content"
-                     });
+            _result =
+            Subject.Manage(new Content.Manage()
+            {
+                ManageUrl = string.Empty,
+                ContentTitle = "a title",
+                Partial = false,
+                EditorContents = "some content"
+            });
 
         It Should_return_the_form_with_an_error = () =>
             _result.AssertViewRendered().ForView("Manage");
@@ -198,28 +204,36 @@ namespace Meek.Specs
     public class When_a_content_admin_enters_partial_page_content : WithSubject<MeekController>
     {
         Establish that = () =>
-                         The<Authorization>()
-                             .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
-                             .Return(true);
+            {
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+                    .Return(true);
+
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetRepository().Save(GivenIt.IsAny<string>(), GivenIt.IsAny<MeekContent>()));
+            };
 
         Because of = () =>
-                     _result =
-                     Subject.Manage(new Content.Manage()
-                                        {
-                                            ManageUrl = "a/bogus/url",
-                                            ContentTitle = string.Empty,
-                                            Partial = true,
-                                            EditorContents = "some content"
-                                        });
+            _result =
+            Subject.Manage(new Content.Manage()
+                            {
+                                ManageUrl = "a/bogus/url",
+                                ContentTitle = string.Empty,
+                                Partial = true,
+                                EditorContents = "some content"
+                            });
 
         It Should_save_the_content = () =>
-            The<Repository>().WasToldTo(x => x.Save(GivenIt.IsAny<string>(), GivenIt.IsAny<MeekContent>())).OnlyOnce();
+            The<Configuration.Configuration>().WasToldTo(
+                x =>
+                x.GetRepository().Save(GivenIt.IsAny<string>(), GivenIt.IsAny<MeekContent>())).
+                OnlyOnce();
 
         It Should_redirect_them_to_the_homepage = () =>
             _result.AssertHttpRedirect().ToUrl("/");
 
-        It Should_have_the_route_registered = () =>
-            RouteTable.Routes.Cast<MeekRoute>().FirstOrDefault(x => x.Url == "a/bogus/url").ShouldNotBeNull();
+        It Should_not_have_the_route_registered = () =>
+            RouteTable.Routes.Cast<MeekRoute>().FirstOrDefault(x => x.Url == "a/bogus/url").ShouldBeNull();
 
         static ActionResult _result;
     }
@@ -229,11 +243,11 @@ namespace Meek.Specs
 
         Establish that = () =>
             {
-                The<Authorization>()
-                    .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
                     .Return(false);
 
-                The<Settings>()
+                The<Configuration.Configuration>()
                     .WhenToldTo(x => x.NotFoundView)
                     .Return("NotFound");
             };
@@ -254,23 +268,30 @@ namespace Meek.Specs
     public class When_a_content_admin_enters_page_content_with_empty_title_and_content : WithSubject<MeekController>
     {
         Establish that = () =>
-                               The<Authorization>()
-                                    .WhenToldTo(x => x.IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
-                                    .Return(true);
+            {
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+                    .Return(true);
+
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetRepository().Save(GivenIt.IsAny<string>(), GivenIt.IsAny<MeekContent>()));
+            };
 
         Because of = () =>
-                         _result =
-                         Subject.Manage(new Content.Manage()
-                         {
-                             ManageUrl = "a/bogus/url",
-                             ContentTitle = null,
-                             Partial = false,
-                             EditorContents = null
-                         });
+            _result =
+            Subject.Manage(new Content.Manage()
+            {
+                ManageUrl = "a/bogus/url",
+                ContentTitle = null,
+                Partial = false,
+                EditorContents = null
+            });
 
 
         It Should_save_the_content = () =>
-             The<Repository>().WasToldTo(x => x.Save(GivenIt.IsAny<string>(), GivenIt.IsAny<MeekContent>())).OnlyOnce();
+            The<Configuration.Configuration>().WasToldTo(
+                x => x.GetRepository().Save(GivenIt.IsAny<string>(), GivenIt.IsAny<MeekContent>())).
+                OnlyOnce();
 
         It Should_redirect_them_to_the_new_content = () =>
              _result.AssertHttpRedirect().ToUrl("/a/bogus/url");

@@ -11,11 +11,11 @@ using Meek.Storage;
 namespace Meek.Specs.Storage.SQL
 {
 
-    public class When_checking_the_schema_of_a_database_that_does_not_have_meek_setup : WithSubject<SQLRepository>
+    public class When_checking_the_schema_of_a_database_that_does_not_have_meek_setup : WithSubject<SqlRepository>
     {
 
         Establish that = () =>
-            Subject = new SQLRepository("EmptyDatabase");
+            Subject = new SqlRepository("EmptyDatabase");
 
         Because of = () =>
             Subject.EnsureSchema();
@@ -28,10 +28,10 @@ namespace Meek.Specs.Storage.SQL
 
     }
 
-    public class When_saving_content_to_storage : WithSubject<SQLRepository>
+    public class When_saving_content_to_storage : WithSubject<SqlRepository>
     {
         Establish that = () =>
-            Subject = new SQLRepository("TestDatabase");
+            Subject = new SqlRepository("TestDatabase");
 
         Because of = () =>
         {
@@ -110,12 +110,12 @@ namespace Meek.Specs.Storage.SQL
             Subject.Exists("route/number/one").ShouldBeFalse();
     }
 
-    public class With_Test_Data : WithSubject<SQLRepository>
+    public class With_Test_Data : WithSubject<SqlRepository>
     {
 
         Establish that = () =>
             {
-                Subject = new SQLRepository("TestDatabase");
+                Subject = new SqlRepository("TestDatabase");
                 Subject.Save("route/number/one", new MeekContent("one", "first", false));
                 Subject.Save("route/number/two", new MeekContent("two", "second", true));
                 Subject.Save("route/number/three", new MeekContent("three", "third", false));
@@ -129,11 +129,11 @@ namespace Meek.Specs.Storage.SQL
             };
     }
 
-    public class When_saving_a_file_to_storage : WithSubject<SQLRepository>
+    public class When_saving_a_file_to_storage : WithSubject<SqlRepository>
     {
 
         Establish that = () =>
-           Subject = new SQLRepository("TestDatabase");
+           Subject = new SqlRepository("TestDatabase");
 
         Because of = () =>
             _fileId = Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg", _fileData));
@@ -158,12 +158,12 @@ namespace Meek.Specs.Storage.SQL
         static string _fileId;
     }
 
-    public class When_asking_to_browse_image_files : WithSubject<SQLRepository>
+    public class When_asking_to_browse_image_files : WithSubject<SqlRepository>
     {
 
         Establish that = () =>
             {
-                Subject = new SQLRepository("TestDatabase");
+                Subject = new SqlRepository("TestDatabase");
 
                 Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg",
                                               Assembly.GetExecutingAssembly().GetManifestResourceStream(

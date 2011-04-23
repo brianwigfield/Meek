@@ -1,0 +1,18 @@
+﻿@model IEnumerable<string>
+
+@{
+    ViewBag.Title = "All Content";
+}
+
+<h2>All Content</h2>
+
+<ul>
+
+    @foreach (var route in Model)
+    {
+        <li>
+            <a href="/Meek/Manage?aspxerrorpath=@route">@route</a>
+        </li>
+    }
+
+</ul>

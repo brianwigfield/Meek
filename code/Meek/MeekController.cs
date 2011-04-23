@@ -20,40 +20,48 @@ namespace Meek
         readonly Repository _repository;
         readonly Authorization _auth;
         readonly ImageResizer _resizer;
-        readonly Settings _settings;
-
-        protected override void OnException(ExceptionContext filterContext)
-        {
-            base.OnException(filterContext);
-        }
+        readonly Configuration.Configuration _config;
 
         public MeekController()
         {
-            _repository = BootStrapper.Services.GetRepository();
-            _auth = BootStrapper.Services.GetAuthorization();
-            _resizer = BootStrapper.Services.GetImageResizer();
-            _settings = BootStrapper.Settings;
+            _repository = BootStrapper.Configuration.GetRepository();
+            _auth = BootStrapper.Configuration.GetAuthorization();
+            _resizer = BootStrapper.Configuration.GetImageResizer();
+            _config = BootStrapper.Configuration;
         }
 
-        public MeekController(Repository repository, Authorization auth, ImageResizer resizer, Settings settings)
+        public MeekController(Configuration.Configuration config)
         {
-            _repository = repository;
-            _auth = auth;
-            _settings = settings;
-            _resizer = resizer;
+            _config = config;
+            _repository = config.GetRepository(); ;
+            _auth = config.GetAuthorization();
+            _resizer = config.GetImageResizer();
+        }
+
+        public ActionResult List()
+        {
+            if (!_auth.IsContentAdmin(HttpContext))
+            {
+                if (string.IsNullOrEmpty(_config.NotFoundView))
+                    return new HttpNotFoundResult();
+                else
+                    return new HttpNotFoundViewResult(_config.NotFoundView);
+            }
+
+            return View("List", _repository.AvailableRoutes(null).Select(x => "/" + x).OrderBy(x => x));
         }
 
         public ActionResult Manage(string aspxerrorpath, bool partial = false)
         {
             if (!_auth.IsContentAdmin(HttpContext))
             {
-                if (string.IsNullOrEmpty(_settings.NotFoundView))
+                if (string.IsNullOrEmpty(_config.NotFoundView))
                     return new HttpNotFoundResult();
                 else
-                    return new HttpNotFoundViewResult(_settings.NotFoundView);
+                    return new HttpNotFoundViewResult(_config.NotFoundView);
             }
 
-            ViewBag.CkEditorPath = _settings.CkEditorPath + "/ckeditor.js";
+            ViewBag.CkEditorPath = _config.CkEditorPath + "/ckeditor.js";
 
             var model = new Manage { ManageUrl = aspxerrorpath };
             if (model.ManageUrl.StartsWith("/"))
@@ -82,7 +90,7 @@ namespace Meek
             if (!_auth.IsContentAdmin(HttpContext))
                 return new HttpStatusCodeResult(403);
 
-            ViewBag.CkEditorPath = _settings.CkEditorPath + "/ckeditor.js";
+            ViewBag.CkEditorPath = _config.CkEditorPath + "/ckeditor.js";
 
             if (string.IsNullOrEmpty(model.ManageUrl))
                 ModelState.AddModelError("ManageUrl", "Url is required.");
@@ -141,7 +149,7 @@ namespace Meek
 
             var model = new CreatePartial()
                             {
-                                CreateLink = @"/" + _settings.AltManageContentRoute + "?aspxerrorpath=" + content + "&partial=true",
+                                CreateLink = @"/" + _config.AltManageContentRoute + "?aspxerrorpath=" + content + "&partial=true",
                                 IsContentAdmin = _auth.IsContentAdmin(HttpContext)
                             };
 

@@ -15,17 +15,18 @@ namespace Meek
         const string VPathPrefix = "/Views/Meek/";
         readonly Dictionary<string, string> _internalResources;
         readonly VirtualPathProvider _baseProvider;
-        readonly Services _services;
+        readonly Configuration.Configuration _config;
 
-        public ContentPathProvider(VirtualPathProvider baseProvider, Services services)
+        public ContentPathProvider(VirtualPathProvider baseProvider, Configuration.Configuration services)
         {
             _baseProvider = baseProvider;
-            _services = services;
+            _config = services;
 
             _internalResources = new Dictionary<string, string>()
                                     {
                                         {"Manage.cshtml",  "Meek.Content.Manage.cshtml"},
                                         {"CreatePartial.cshtml", "Meek.Content.CreatePartial.cshtml"},
+                                        {"List.cshtml", "Meek.Content.List.cshtml"},
                                         {"BrowseFiles.cshtml", "Meek.Content.BrowseFiles.cshtml"},
                                         {"UploadFileSuccess.cshtml", "Meek.Content.UploadFileSuccess.cshtml"}
                                     };
@@ -43,7 +44,7 @@ namespace Meek
                 if (IsInternalResource(virtualPath))
                     return true;
 
-                var repository = _services.GetRepository();
+                var repository = _config.GetRepository();
                 exists = repository.Exists(TranslateVirtualPath(virtualPath).Replace(".cshtml", string.Empty));
             }
             return exists;
@@ -57,9 +58,9 @@ namespace Meek
             if (IsMeekPath(virtualPath) && IsInternalResource(virtualPath))
                 return GetInternalResource(virtualPath);
 
-            var repository = _services.GetRepository();
+            var repository = _config.GetRepository();
             if (IsMeekPath(virtualPath) && repository.Exists(TranslateVirtualPath(virtualPath).Replace(".cshtml", string.Empty)))
-                return new ContentVirtualFile(repository, virtualPath, TranslateVirtualPath(virtualPath), _services.GetAuthorization());
+                return new ContentVirtualFile(repository, virtualPath, TranslateVirtualPath(virtualPath), _config.GetAuthorization());
 
             return null;
         }
