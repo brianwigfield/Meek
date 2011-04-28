@@ -17,7 +17,7 @@ using GivenIt = Moq.It;
 namespace Meek.Specs
 {
 
-    public class When_a_content_admin_asks_for_a_non_existent_page : WithSubject<MeekController>
+    public class When_a_content_admin_asks_for_a_non_existent_page : WithSubject<MeekTestController>
     {
         Establish that = () =>
             {
@@ -28,7 +28,7 @@ namespace Meek.Specs
                 The<Configuration.Configuration>()
                     .WhenToldTo(x => x.GetRepository().Exists("a/bogus/url"))
                     .Return(false);
-
+                
             };
 
         Because of = () =>
@@ -46,7 +46,7 @@ namespace Meek.Specs
         static ActionResult _result;
     }
 
-    public class When_a_content_admin_asks_to_edit_an_existing_page : WithSubject<MeekController>
+    public class When_a_content_admin_asks_to_edit_an_existing_page : WithSubject<MeekTestController>
     {
         Establish that = () =>
         {
@@ -82,7 +82,7 @@ namespace Meek.Specs
         static ActionResult _result;
     }
 
-    public class When_a_content_admin_asks_to_delete_an_existing_page : WithSubject<MeekController>
+    public class When_a_content_admin_asks_to_delete_an_existing_page : WithSubject<MeekTestController>
     {
         Establish that = () =>
         {
@@ -113,7 +113,7 @@ namespace Meek.Specs
     }
 
 
-    public class When_a_content_admin_enters_page_content : WithSubject<MeekController>
+    public class When_a_content_admin_enters_page_content : WithSubject<MeekTestController>
     {
         Establish that = () =>
             {
@@ -148,7 +148,7 @@ namespace Meek.Specs
         static ActionResult _result;
     }
 
-    public class When_a_non_content_admin_enters_page_content : WithSubject<MeekController>
+    public class When_a_non_content_admin_enters_page_content : WithSubject<MeekTestController>
     {
         Establish that = () =>
             The<Configuration.Configuration>()
@@ -172,7 +172,7 @@ namespace Meek.Specs
         static ActionResult _result;
     }
 
-    public class When_a_content_admin_enters_page_content_without_a_url : WithSubject<MeekController>
+    public class When_a_content_admin_enters_page_content_without_a_url : WithSubject<MeekTestController>
     {
         Establish that = () =>
             The<Configuration.Configuration>()
@@ -201,7 +201,7 @@ namespace Meek.Specs
         static ActionResult _result;
     }
 
-    public class When_a_content_admin_enters_partial_page_content : WithSubject<MeekController>
+    public class When_a_content_admin_enters_partial_page_content : WithSubject<MeekTestController>
     {
         Establish that = () =>
             {
@@ -217,7 +217,7 @@ namespace Meek.Specs
             _result =
             Subject.Manage(new Content.Manage()
                             {
-                                ManageUrl = "a/bogus/url",
+                                ManageUrl = "a/bogus/partial/url",
                                 ContentTitle = string.Empty,
                                 Partial = true,
                                 EditorContents = "some content"
@@ -233,12 +233,12 @@ namespace Meek.Specs
             _result.AssertHttpRedirect().ToUrl("/");
 
         It Should_not_have_the_route_registered = () =>
-            RouteTable.Routes.Cast<MeekRoute>().FirstOrDefault(x => x.Url == "a/bogus/url").ShouldBeNull();
+            RouteTable.Routes.Cast<MeekRoute>().FirstOrDefault(x => x.Url == "a/bogus/partial/url").ShouldBeNull();
 
         static ActionResult _result;
     }
 
-    public class When_a_non_content_admin_asks_to_manage_pages : WithSubject<MeekController>
+    public class When_a_non_content_admin_asks_to_manage_pages : WithSubject<MeekTestController>
     {
 
         Establish that = () =>
@@ -265,7 +265,7 @@ namespace Meek.Specs
 
     }
 
-    public class When_a_content_admin_enters_page_content_with_empty_title_and_content : WithSubject<MeekController>
+    public class When_a_content_admin_enters_page_content_with_empty_title_and_content : WithSubject<MeekTestController>
     {
         Establish that = () =>
             {

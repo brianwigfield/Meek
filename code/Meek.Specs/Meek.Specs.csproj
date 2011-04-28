@@ -66,6 +66,7 @@
     <Compile Include="ImageResizerSpecs.cs" />
     <Compile Include="ManageContentSpecs.cs" />
     <Compile Include="ManageFileSpecs.cs" />
+    <Compile Include="MeekTestController.cs" />
     <Compile Include="PathProviderSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\FileSystemStorageSpecs.cs" />

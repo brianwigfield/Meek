@@ -4,9 +4,12 @@
     <RunSpecsCommand>
       ..\code\packages\Machine.Specifications.0.4.8.0\tools\mspec-clr4.exe $(AdditionalSettings) ..\code\Meek.specs\bin\Release\Meek.specs.dll --html ../docs/Meek.specs.html
 	  </RunSpecsCommand>
-    <NugetPackCommand>
-      nuget\NuGet.exe pack ../nuget/meek.nuspec -OutputDirectory output 
-	  </NugetPackCommand>	  
+    <NugetStandardPackCommand>
+      nuget\NuGet.exe pack ../nuget/standard/meek.nuspec -OutputDirectory output 
+	  </NugetStandardPackCommand>	  
+    <NugetMvcTurbinePackCommand>
+      nuget\NuGet.exe pack ../nuget/mvcturbine/meek.mvcturbine.nuspec -OutputDirectory output 
+	  </NugetMvcTurbinePackCommand>	  
   </PropertyGroup>
 
   <Target Name="Build">
@@ -14,7 +17,8 @@
     <MSBuild Projects="..\code\Meek.sln" Properties="Configuration=Release;WarningLevel=2;" />
     <CallTarget Targets="RunSpecs" />
     <CallTarget Targets="CopyToOutput" />
-    <CallTarget Targets="NugetPack" />
+    <CallTarget Targets="NugetStandardPack" />
+    <CallTarget Targets="NugetMvcTurbinePack" />
   </Target>
 
   <Target Name="RunSpecs">
@@ -22,18 +26,27 @@
     <Exec Command="$(RunSpecsCommand)" />
   </Target>
 
-  <Target Name="NugetPack">
-    <Message Text="Preparing Nuget package using: $(NugetPackCommand)" />
-    <Exec Command="$(NugetPackCommand)" />
+  <Target Name="NugetStandardPack">
+    <Message Text="Preparing Standard Nuget package using: $(NugetPackCommand)" />
+    <Exec Command="$(NugetStandardPackCommand)" />
+  </Target>
+
+  <Target Name="NugetMvcTurbinePack">
+    <Message Text="Preparing MvcTurbine Nuget package using: $(NugetPackCommand)" />
+    <Exec Command="$(NugetMvcTurbinePackCommand)" />
   </Target>
 
   <Target Name="CopyToOutput">
     <ItemGroup>
-      <FilesToPublish Include="..\code\Meek\bin\release\*.dll" />
+      <StandardFilesToPublish Include="..\code\Meek\bin\release\Meek*.dll" />
+      <MvcTurbineFilesToPublish Include="..\code\Meek.MvcTurbine\bin\release\Meek*.dll" />
     </ItemGroup>
     <Copy
-      SourceFiles="@(FilesToPublish)"
-      DestinationFolder="..\nuget\lib\net40\" ></Copy>
+      SourceFiles="@(StandardFilesToPublish)"
+      DestinationFolder="..\nuget\standard\lib\net40\" ></Copy>
+    <Copy
+      SourceFiles="@(MvcTurbineFilesToPublish)"
+      DestinationFolder="..\nuget\mvcturbine\lib\net40\" ></Copy>
     <Copy
       SourceFiles="@(FilesToPublish)"
       DestinationFolder="output" ></Copy>

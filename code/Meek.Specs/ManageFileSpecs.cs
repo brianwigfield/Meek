@@ -19,7 +19,7 @@ using GivenIt = Moq.It;
 
 namespace Meek.Specs
 {
-    public class When_uploading_an_image : WithSubject<MeekController>
+    public class When_uploading_an_image : WithSubject<MeekTestController>
     {
         Establish that = () =>
             {
@@ -53,7 +53,7 @@ namespace Meek.Specs
         static Mock<HttpPostedFileBase> _file;
     }
 
-    public class When_asking_to_browse_images : WithSubject<MeekController>
+    public class When_asking_to_browse_images : WithSubject<MeekTestController>
     {
 
         Establish that = () =>
@@ -82,7 +82,7 @@ namespace Meek.Specs
         static ActionResult _result;
     }
 
-    public class When_asking_for_an_image : WithSubject<MeekController>
+    public class When_asking_for_an_image : WithSubject<MeekTestController>
     {
 
         Establish that = () =>
@@ -102,7 +102,7 @@ namespace Meek.Specs
         static ActionResult _result;
     }
 
-    public class When_asking_for_an_image_thumbnail : WithSubject<MeekController>
+    public class When_asking_for_an_image_thumbnail : WithSubject<MeekTestController>
     {
 
         Establish that = () =>

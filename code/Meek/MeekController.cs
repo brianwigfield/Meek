@@ -30,7 +30,7 @@ namespace Meek
             _config = BootStrapper.Configuration;
         }
 
-        public MeekController(Configuration.Configuration config)
+        protected MeekController(Configuration.Configuration config)
         {
             _config = config;
             _repository = config.GetRepository(); ;
