@@ -2,13 +2,13 @@
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>Meek.MvcTurbine</id>
-    <version>0.6</version>
+    <version>0.7</version>
     <authors>Brian Wigfield</authors>
     <owners>AdventureTech</owners>
     <projectUrl>http://www.adventuretechgroup.com/labs-meek/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>MvcTurbine Blade for Meek, an unobtrusive CMS system designed to bolt on to an existing MVC3 Razor web app. Includes image uploading and wiki style editing.</description>
-    <tags>MvcTurbine CMS MVC3 Razor CKEditor</tags>
+    <description>MvcTurbine Blade for Meek, an unobtrusive CMS system designed to bolt on to an existing MVC3 Razor or ASPX web app. Includes image uploading and wiki style editing.</description>
+    <tags>MvcTurbine CMS MVC3 Razor ASPX CKEditor</tags>
     
     <dependencies>
       <dependency id="MvcTurbine" version="3.0" />

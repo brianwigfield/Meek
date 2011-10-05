@@ -28,7 +28,11 @@ namespace Meek.Specs
                 The<Configuration.Configuration>()
                     .WhenToldTo(x => x.GetRepository().Exists("a/bogus/url"))
                     .Return(false);
-                
+
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.ViewEngineOptions)
+                    .Return(new ViewEngineOptions{ Type = ViewEngineType.Razor });
+
             };
 
         Because of = () =>
@@ -57,6 +61,10 @@ namespace Meek.Specs
             The<Configuration.Configuration>()
                 .WhenToldTo(x => x.GetRepository().Exists("existing/route"))
                 .Return(true);
+
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.ViewEngineOptions)
+                .Return(new ViewEngineOptions { Type = ViewEngineType.Razor });
 
             The<Configuration.Configuration>()
                 .WhenToldTo(x => x.GetRepository().Get("existing/route"))
@@ -175,9 +183,15 @@ namespace Meek.Specs
     public class When_a_content_admin_enters_page_content_without_a_url : WithSubject<MeekTestController>
     {
         Establish that = () =>
-            The<Configuration.Configuration>()
-                .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
-                .Return(true);
+            {
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+                    .Return(true);
+
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.ViewEngineOptions)
+                    .Return(new ViewEngineOptions {Type = ViewEngineType.Razor});
+            };
 
         Because of = () =>
             _result =

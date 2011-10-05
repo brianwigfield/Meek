@@ -15,13 +15,15 @@ namespace Meek
         readonly string _pathKey;
         readonly Repository _repository;
         readonly Authorization _auth;
+        readonly ViewEngineOptions _viewEngine;
 
-        public ContentVirtualFile(Repository repository, string requestedPath, string pathKey, Authorization auth)
+        public ContentVirtualFile(Repository repository, string requestedPath, string pathKey, Authorization auth, ViewEngineOptions viewEngine)
             : base(requestedPath)
         {
-            _pathKey = pathKey.Replace(".cshtml", string.Empty);
+            _pathKey = pathKey;
             _repository = repository;
             _auth = auth;
+            _viewEngine = viewEngine;
         }
 
         public override Stream Open()
@@ -34,10 +36,28 @@ namespace Meek
             if (_auth.IsContentAdmin(httpContext))
                 contentMarkup = AddEditLinkMarkup(contentMarkup, content.Partial);
 
-            var constructedContent = string.Format("@{{ {0} ViewBag.Title = \"{1}\";}} {2}"
-                                                   , content.Partial ? " Layout = null;" : null
-                                                   , content.Title
-                                                   , contentMarkup);
+            var constructedContent = string.Empty;
+            switch (_viewEngine.Type)
+            {
+                case ViewEngineType.Razor:
+                    constructedContent = string.Format(
+                        "@{{ {0} ViewBag.Title = \"{1}\";}} {2}",
+                        content.Partial ? " Layout = null;" : null,
+                        content.Title,
+                        contentMarkup);
+                    break;
+                case ViewEngineType.ASPX:
+                    if (!content.Partial)
+                        contentMarkup = string.Format(
+                            @"<asp:Content ID=""MeekContents"" ContentPlaceHolderID=""{0}"" runat=""server"">{1}</asp:Content>",
+                            _viewEngine.PlaceHolder, contentMarkup);
+                    constructedContent = string.Format(
+                        @"<%@ Page Title=""{0}"" Language=""C#"" {1} Inherits=""System.Web.Mvc.ViewPage"" %>{2}",
+                        content.Title,
+                        content.Partial ? null : "MasterPageFile=\"" + _viewEngine.Layout + "\"",
+                        contentMarkup);
+                    break;
+            }
             
             return new MemoryStream(Encoding.UTF8.GetBytes(constructedContent));
         }

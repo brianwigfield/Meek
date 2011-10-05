@@ -63,6 +63,7 @@
     <Compile Include="Configuration\DefaultConfiguration.cs" />
     <Compile Include="Configuration\MeekConfigurationSection.cs" />
     <Compile Include="Configuration\StandardConfigProvider.cs" />
+    <Compile Include="Configuration\ViewEngineOptions.cs" />
     <Compile Include="ContentPathProvider.cs" />
     <Compile Include="ContentVirtualFile.cs" />
     <Compile Include="Content\BrowseFiles.cs" />
@@ -87,7 +88,7 @@
     <Compile Include="VirtualFileStream.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Manage.cshtml" />
+    <EmbeddedResource Include="Content\Razor\Manage.cshtml" />
     <EmbeddedResource Include="Content\ckeditor\adapters\jquery.js" />
     <EmbeddedResource Include="Content\ckeditor\ckeditor.js" />
     <EmbeddedResource Include="Content\ckeditor\config.js" />
@@ -296,19 +297,36 @@
     <EmbeddedResource Include="Content\ckeditor\themes\default\theme.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\CreatePartial.cshtml" />
+    <EmbeddedResource Include="Content\Razor\CreatePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\UploadFileSuccess.cshtml" />
+    <EmbeddedResource Include="Content\Razor\UploadFileSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\BrowseFiles.cshtml" />
+    <EmbeddedResource Include="Content\Razor\BrowseFiles.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Storage\CreateSchema.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\List.cshtml" />
+    <EmbeddedResource Include="Content\Razor\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\ASPX\List.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\ASPX\BrowseFiles.aspx" />
+    <EmbeddedResource Include="Content\ASPX\Manage.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\ASPX\CreatePartial.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\ASPX\UploadFileSuccess.aspx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

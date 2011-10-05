@@ -9,15 +9,15 @@
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
     <div style="padding:5px;">
-        Content URL: @Html.TextBoxFor(m => m.ManageUrl)
+        <label style="width:125px; float:left;">Content URL:</label> @Html.TextBoxFor(m => m.ManageUrl, new { style = "width:300px;" })
         @Html.ValidationMessageFor(m => m.ManageUrl)
     </div>
     <div style="padding:5px;">
-        Title: @Html.TextBoxFor(m => m.ContentTitle)
+        <label style="width:125px; float:left;">Title:</label> @Html.TextBoxFor(m => m.ContentTitle, new { style = "width:300px;" })
         @Html.ValidationMessageFor(m => m.ContentTitle)
     </div>
     <div style="padding:5px;">
-        Partial Content: @Html.CheckBoxFor(m => m.Partial)
+        <label style="width:125px; float:left;">Is Partial Content?:</label> @Html.CheckBoxFor(m => m.Partial)
         @Html.ValidationMessageFor(m => m.Partial)
     </div>
     <div style="padding:5px;">
@@ -26,6 +26,6 @@
             @Model.EditorContents
         </textarea>
     </div>
-    <button name="submit" value="save" id="SaveContent">Save</button>
-    <button name="submit" value="delete" id="DeleteContent">Delete</button>
+    <button name="submit" value="save" id="SaveContent">Save Content</button>
+    <button name="submit" value="delete" id="DeleteContent">Delete Content</button>
 }

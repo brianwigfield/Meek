@@ -16,14 +16,21 @@ namespace Meek.Configuration
         {
             _config = config;
 
-            AltManageContentRoute = string.IsNullOrEmpty(_config.AltManageContentRoute) ? "Missing" : _config.AltManageContentRoute;
-            CkEditorPath = string.IsNullOrEmpty(_config.CkEditorPath) ? "/Meek/ckeditor" : _config.CkEditorPath;
+            AltManageContentRoute = string.IsNullOrWhiteSpace(_config.AltManageContentRoute) ? "Missing" : _config.AltManageContentRoute;
+            CkEditorPath = string.IsNullOrWhiteSpace(_config.CkEditorPath) ? "/Meek/ckeditor" : _config.CkEditorPath;
             NotFoundView = config.NotFoundView;
+            ViewEngineOptions = new ViewEngineOptions
+                                    {
+                                        Type = string.IsNullOrWhiteSpace(_config.ViewEngine) ? ViewEngineType.Razor : (ViewEngineType)Enum.Parse(typeof(ViewEngineType), _config.ViewEngine, true),
+                                        Layout = _config.AspxConfig.MasterPage,
+                                        PlaceHolder = _config.AspxConfig.ContentPlaceHolderId
+                                    };
         }
 
         public string CkEditorPath { get; set; }
         public string AltManageContentRoute { get; set; }
         public string NotFoundView { get; set; }
+        public ViewEngineOptions ViewEngineOptions { get; set; }
 
         public Repository GetRepository()
         {

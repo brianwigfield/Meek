@@ -8,6 +8,7 @@ namespace Meek.Configuration
         string CkEditorPath { get; set; }
         string AltManageContentRoute { get; set; }
         string NotFoundView { get; set; }
+        ViewEngineOptions ViewEngineOptions { get; set; }
 
         Repository GetRepository();
         Authorization GetAuthorization();

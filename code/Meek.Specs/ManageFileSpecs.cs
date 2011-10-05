@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Meek.Configuration;
 using Meek.Content;
 using MvcContrib.TestHelper;
 using Machine.Fakes;
@@ -57,14 +58,20 @@ namespace Meek.Specs
     {
 
         Establish that = () =>
-            The<Configuration.Configuration>()
-                .WhenToldTo(x => x.GetRepository().GetFiles())
-                .Return(new List<string>()
-                            {
-                                "one",
-                                "two",
-                                "three"
-                            });
+            {
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.ViewEngineOptions)
+                    .Return(new ViewEngineOptions {Type = ViewEngineType.Razor});
+
+                The<Configuration.Configuration>()
+                    .WhenToldTo(x => x.GetRepository().GetFiles())
+                    .Return(new List<string>()
+                                {
+                                    "one",
+                                    "two",
+                                    "three"
+                                });
+            };
 
         Because of = () =>
             _result = Subject.BrowseFiles("image", "default", "callback");

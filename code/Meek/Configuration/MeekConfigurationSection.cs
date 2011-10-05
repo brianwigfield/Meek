@@ -34,12 +34,26 @@ namespace Meek.Configuration
             set { this["notFoundView"] = value; }
         }
 
+        [ConfigurationProperty("viewEngine", IsRequired = false)]
+        public string ViewEngine
+        {
+            get { return (string)this["viewEngine"]; }
+            set { this["viewEngine"] = value; }
+        }
+
         [ConfigurationProperty("contentAdmin", IsRequired = false)]
         [ConfigurationCollection(typeof(ContentAdminCollection), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
         public ContentAdminCollection ContentAdmin
         {
             get { return (ContentAdminCollection)this["contentAdmin"]; }
             set { this["contentAdmin"] = value; }
+        }
+
+        [ConfigurationProperty("aspxConfig", IsRequired = false)]
+        public MeekConfigurationAspx AspxConfig
+        {
+            get { return (MeekConfigurationAspx)this["aspxConfig"]; }
+            set { this["aspxConfig"] = value; }
         }
 
         public override bool IsReadOnly()
@@ -61,6 +75,23 @@ namespace Meek.Configuration
             {
                 get { return (string)this["source"]; }
                 set { this["source"] = value; }
+            }
+        }
+
+        public class MeekConfigurationAspx : ConfigurationElement
+        {
+            [ConfigurationProperty("masterPage", IsRequired = true)]
+            public string MasterPage
+            {
+                get { return (string)this["masterPage"]; }
+                set { this["masterPage"] = value; }
+            }
+
+            [ConfigurationProperty("contentPlaceHolderId", IsRequired = false)]
+            public string ContentPlaceHolderId
+            {
+                get { return (string)this["contentPlaceHolderId"]; }
+                set { this["contentPlaceHolderId"] = value; }
             }
         }
 

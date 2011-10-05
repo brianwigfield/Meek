@@ -10,4 +10,7 @@ CKEDITOR.editorConfig = function( config )
 	// config.uiColor = '#AADC6E';
 	config.filebrowserBrowseUrl = '/Meek/BrowseFiles';
 	config.filebrowserUploadUrl = '/Meek/UploadFile';
+	config.protectedSource.push(/<style[\s\S]*?<\/style>/g);   // embeded styles
+	config.protectedSource.push(/<%[\s\S]*?%>/g);   // ASP code
+	config.protectedSource.push(/(]+>[\s|\S]*?<\/asp:[^\>]+>)|(]+\/>)/gi);   // ASP.Net code
 };

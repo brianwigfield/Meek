@@ -120,6 +120,7 @@ namespace Meek.Specs
             var services = new Mock<Configuration.Configuration>();
             services.Setup(x => x.GetRepository()).Returns(_repo.Object);
             services.Setup(x => x.GetAuthorization()).Returns(auth.Object);
+            services.Setup(x => x.ViewEngineOptions).Returns( new ViewEngineOptions{ Type = ViewEngineType.Razor});
             auth.Setup(x => x.IsContentAdmin(Moq.It.IsAny<HttpContextBase>())).Returns(true);
             _provider = new ContentPathProvider(new BasicVirtualPathProvider(), services.Object);
         };

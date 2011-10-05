@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web.Caching;
 using System.Web.Hosting;
-using Meek.Configuration;
 
 namespace Meek
 {
     public class ContentPathProvider : VirtualPathProvider
     {
         const string VPathPrefix = "/Views/Meek/";
+        readonly string _extension;
         readonly Dictionary<string, string> _internalResources;
         readonly VirtualPathProvider _baseProvider;
         readonly Configuration.Configuration _config;
@@ -21,21 +23,33 @@ namespace Meek
         {
             _baseProvider = baseProvider;
             _config = services;
+            _internalResources = new Dictionary<string, string>();
 
-            _internalResources = new Dictionary<string, string>()
-                                    {
-                                        {"Manage.cshtml",  "Meek.Content.Manage.cshtml"},
-                                        {"CreatePartial.cshtml", "Meek.Content.CreatePartial.cshtml"},
-                                        {"List.cshtml", "Meek.Content.List.cshtml"},
-                                        {"BrowseFiles.cshtml", "Meek.Content.BrowseFiles.cshtml"},
-                                        {"UploadFileSuccess.cshtml", "Meek.Content.UploadFileSuccess.cshtml"}
-                                    };
+            switch (_config.ViewEngineOptions.Type)
+            {
+                case Configuration.ViewEngineType.Razor:
+                    _extension = ".cshtml";
+                    break;
+                case Configuration.ViewEngineType.ASPX:
+                    _extension = ".aspx";
+                    break;
+                default:
+                    throw new ArgumentException("Invalid ViewEngine Specified.");
+            }
 
+            Action<string> addResource = (file) =>
+                _internalResources.Add(file + _extension, string.Format("Meek.Content.{0}.{1}{2}", _config.ViewEngineOptions.Type.ToString(), file, _extension));
+
+            addResource("Manage");
+            addResource("CreatePartial");
+            addResource("List");
+            addResource("BrowseFiles");
+            addResource("UploadFileSuccess");
         }
 
         public override bool FileExists(string virtualPath)
         {
-            bool exists = false;
+            var exists = false;
             if (_baseProvider != null)
                 exists =_baseProvider.FileExists(virtualPath);
 
@@ -45,7 +59,7 @@ namespace Meek
                     return true;
 
                 var repository = _config.GetRepository();
-                exists = repository.Exists(TranslateVirtualPath(virtualPath).Replace(".cshtml", string.Empty));
+                exists = repository.Exists(TranslateVirtualPath(virtualPath).Replace(_extension, string.Empty));
             }
             return exists;
         }
@@ -59,8 +73,13 @@ namespace Meek
                 return GetInternalResource(virtualPath);
 
             var repository = _config.GetRepository();
-            if (IsMeekPath(virtualPath) && repository.Exists(TranslateVirtualPath(virtualPath).Replace(".cshtml", string.Empty)))
-                return new ContentVirtualFile(repository, virtualPath, TranslateVirtualPath(virtualPath), _config.GetAuthorization());
+            if (IsMeekPath(virtualPath) && repository.Exists(TranslateVirtualPath(virtualPath).Replace(_extension, string.Empty)))
+                return new ContentVirtualFile(
+                    repository, 
+                    virtualPath, 
+                    TranslateVirtualPath(virtualPath).Replace(_extension, null), 
+                    _config.GetAuthorization(),
+                    _config.ViewEngineOptions);
 
             return null;
         }
@@ -70,7 +89,7 @@ namespace Meek
             if (virtualPath.StartsWith("~"))
                 virtualPath = virtualPath.Substring(1);
 
-            return virtualPath.StartsWith(VPathPrefix);
+            return virtualPath.StartsWith(VPathPrefix, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private static string TranslateVirtualPath(string virtualPath)
@@ -78,7 +97,7 @@ namespace Meek
             if (virtualPath.StartsWith("~"))
                 virtualPath = virtualPath.Substring(1);
 
-            return virtualPath.Replace(VPathPrefix, null);
+            return Regex.Replace(virtualPath, VPathPrefix, "", RegexOptions.IgnoreCase);
         }
 
         public override CacheDependency GetCacheDependency(string virtualPath, IEnumerable virtualPathDependencies, DateTime utcStart)
@@ -105,9 +124,13 @@ namespace Meek
         private VirtualFile GetInternalResource(string virtualPath)
         {
             var resource = _internalResources.Single(x => x.Key == TranslateVirtualPath(virtualPath));
+            var resourceString =
+                Encoding.UTF8.GetString(
+                    Assembly.GetExecutingAssembly().GetManifestResourceStream(resource.Value).ReadFully());
 
-            return new VirtualFileStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(resource.Value)
-                                                                   , virtualPath);
+            resourceString = resourceString.Replace("{PlaceHolder}", _config.ViewEngineOptions.PlaceHolder);
+
+            return new VirtualFileStream(new MemoryStream(Encoding.UTF8.GetBytes(resourceString)), virtualPath);
         }
 
     }

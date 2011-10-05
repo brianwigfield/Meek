@@ -38,6 +38,17 @@ namespace Meek
             _resizer = config.GetImageResizer();
         }
 
+        private ViewResult MeekResult(string view, object model)
+        {
+            if (!string.IsNullOrWhiteSpace(_config.ViewEngineOptions.Layout))
+            {
+                ViewBag.PlaceHolder = _config.ViewEngineOptions.PlaceHolder;
+                return View(view, _config.ViewEngineOptions.Layout, model);
+            }
+
+            return View(view, model);
+        }
+
         public ActionResult List()
         {
             if (!_auth.IsContentAdmin(HttpContext))
@@ -48,7 +59,7 @@ namespace Meek
                     return new HttpNotFoundViewResult(_config.NotFoundView);
             }
 
-            return View("List", _repository.AvailableRoutes(null).Select(x => "/" + x).OrderBy(x => x));
+            return MeekResult("List", _repository.AvailableRoutes(null).Select(x => "/" + x).OrderBy(x => x));
         }
 
         public ActionResult Manage(string aspxerrorpath, bool partial = false)
@@ -79,7 +90,7 @@ namespace Meek
                 model.Partial = partial;
             }
 
-            return View("Manage", model);
+            return MeekResult("Manage", model);
         }
 
         [HttpPost]
@@ -99,7 +110,7 @@ namespace Meek
                 ModelState.AddModelError("ContentTitle", "Title can not be applied to partial content.");
 
             if (!ModelState.IsValid)
-                return View("Manage", model);
+                return MeekResult("Manage", model);
 
             //Since the route table does not accept routes starting with / then trim it off
             if (model.ManageUrl.StartsWith("/"))
@@ -126,7 +137,7 @@ namespace Meek
         {
             if (!_auth.IsContentAdmin(HttpContext))
                 return new HttpStatusCodeResult(403);
-
+            
             _repository.Remove(manageUrl);
             RouteTable.Routes.Remove(RouteTable.Routes.Cast<Route>().Single(x => x.Url == manageUrl));
 
@@ -180,8 +191,8 @@ namespace Meek
 
         public ActionResult BrowseFiles(string type, string ckEditor, string ckEditorFuncNum)
         {
-            
-            return View("BrowseFiles", new BrowseFiles() {Files = _repository.GetFiles(), Callback = ckEditorFuncNum});
+
+            return MeekResult("BrowseFiles", new BrowseFiles() { Files = _repository.GetFiles(), Callback = ckEditorFuncNum });
         }
 
         public ActionResult UploadFile(HttpPostedFileBase upload, string ckEditorFuncNum)
