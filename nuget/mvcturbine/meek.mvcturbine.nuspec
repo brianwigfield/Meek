@@ -5,7 +5,7 @@
     <version>0.7</version>
     <authors>Brian Wigfield</authors>
     <owners>AdventureTech</owners>
-    <projectUrl>http://www.adventuretechgroup.com/labs-meek/</projectUrl>
+    <projectUrl>http://www.gingerrant.com/meek/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>MvcTurbine Blade for Meek, an unobtrusive CMS system designed to bolt on to an existing MVC3 Razor or ASPX web app. Includes image uploading and wiki style editing.</description>
     <tags>MvcTurbine CMS MVC3 Razor ASPX CKEditor</tags>
