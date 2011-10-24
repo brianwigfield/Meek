@@ -4,7 +4,10 @@
 
     <script type="text/javascript" src="<%=ViewBag.CkEditorPath%>"></script>
 
+    <% if(Model.IncludeFormTag) { %>
     <form method="post">
+    <% } %>
+
         <%= Html.ValidationSummary(true) %>
         <div style="padding:5px;">
             <label style="width:125px; float:left;">Content URL:</label> <%=Html.TextBoxFor(m => m.ManageUrl, new { style = "width:300px;" })%>
@@ -26,6 +29,9 @@
         </div>
         <button name="submit" value="save" id="SaveContent">Save Content</button>
         <button name="submit" value="delete" id="DeleteContent">Delete Content</button>
+
+    <% if(Model.IncludeFormTag) { %>
     </form>
+    <% } %>
 
 </asp:Content>

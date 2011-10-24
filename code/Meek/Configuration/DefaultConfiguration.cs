@@ -22,9 +22,14 @@ namespace Meek.Configuration
             ViewEngineOptions = new ViewEngineOptions
                                     {
                                         Type = string.IsNullOrWhiteSpace(_config.ViewEngine) ? ViewEngineType.Razor : (ViewEngineType)Enum.Parse(typeof(ViewEngineType), _config.ViewEngine, true),
-                                        Layout = _config.AspxConfig.MasterPage,
-                                        PlaceHolder = _config.AspxConfig.ContentPlaceHolderId
+                                        IncludeFormTag = true
                                     };
+            if (ViewEngineOptions.Type == ViewEngineType.ASPX)
+            {
+                ViewEngineOptions.Layout = _config.AspxConfig.MasterPage;
+                ViewEngineOptions.PlaceHolder = _config.AspxConfig.ContentPlaceHolderId;
+                ViewEngineOptions.IncludeFormTag = _config.AspxConfig.IncludeFormTag;
+            }
         }
 
         public string CkEditorPath { get; set; }

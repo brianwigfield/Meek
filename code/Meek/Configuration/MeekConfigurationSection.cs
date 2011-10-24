@@ -93,6 +93,13 @@ namespace Meek.Configuration
                 get { return (string)this["contentPlaceHolderId"]; }
                 set { this["contentPlaceHolderId"] = value; }
             }
+
+            [ConfigurationProperty("includeFormTag", IsRequired = false, DefaultValue = true)]
+            public bool IncludeFormTag
+            {
+                get { return (bool)this["includeFormTag"]; }
+                set { this["includeFormTag"] = value; }
+            }
         }
 
         public class ContentAdminCollection : ConfigurationElementCollection

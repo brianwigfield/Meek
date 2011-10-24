@@ -74,7 +74,12 @@ namespace Meek
 
             ViewBag.CkEditorPath = _config.CkEditorPath + "/ckeditor.js";
 
-            var model = new Manage { ManageUrl = aspxerrorpath };
+            var model = new Manage
+                            {
+                                ManageUrl = aspxerrorpath,
+                                IncludeFormTag = _config.ViewEngineOptions.IncludeFormTag
+                            };
+
             if (model.ManageUrl.StartsWith("/"))
                 model.ManageUrl = model.ManageUrl.Substring(1);
 

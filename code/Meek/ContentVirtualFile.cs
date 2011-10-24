@@ -40,6 +40,7 @@ namespace Meek
             switch (_viewEngine.Type)
             {
                 case ViewEngineType.Razor:
+                    contentMarkup = contentMarkup.Replace("@", "@@");
                     constructedContent = string.Format(
                         "@{{ {0} ViewBag.Title = \"{1}\";}} {2}",
                         content.Partial ? " Layout = null;" : null,

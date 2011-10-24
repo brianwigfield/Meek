@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Meek.Content
+﻿namespace Meek.Content
 {
     public class UploadFileSuccess
     {

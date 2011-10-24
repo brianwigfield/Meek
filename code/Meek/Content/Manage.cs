@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-
-namespace Meek.Content
+﻿namespace Meek.Content
 {
     public class Manage
     {
@@ -13,5 +6,6 @@ namespace Meek.Content
         public string ContentTitle { get; set; }
         public bool Partial { get; set; }
         public string EditorContents { get; set; }
+        public bool IncludeFormTag { get; set; }
     }
 }

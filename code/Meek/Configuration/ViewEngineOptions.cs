@@ -5,6 +5,7 @@
         public ViewEngineType Type { get; set; }
         public string Layout { get; set; }
         public string PlaceHolder { get; set; }
+        public bool IncludeFormTag { get; set; }
     }
 
     public enum ViewEngineType
