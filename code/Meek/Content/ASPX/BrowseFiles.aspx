@@ -5,7 +5,7 @@
     <script type='text/javascript'>
       function callBack(fileId)
       {
-      window.opener.CKEDITOR.tools.callFunction('@Model.Callback', '/Meek/GetFile/' + fileId, '@Model.Message');
+      window.opener.CKEDITOR.tools.callFunction('<%=Model.Callback%>', '/Meek/GetFile/' + fileId, '<%=Model.Message%>');
       window.close();
       }
     </script>

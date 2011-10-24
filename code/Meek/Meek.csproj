@@ -312,10 +312,14 @@
     <EmbeddedResource Include="Content\Razor\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\ASPX\List.aspx" />
+    <EmbeddedResource Include="Content\ASPX\List.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\ASPX\BrowseFiles.aspx" />
+    <EmbeddedResource Include="Content\ASPX\BrowseFiles.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Content\ASPX\Manage.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </EmbeddedResource>
@@ -326,7 +330,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\ASPX\UploadFileSuccess.aspx" />
+    <EmbeddedResource Include="Content\ASPX\UploadFileSuccess.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
