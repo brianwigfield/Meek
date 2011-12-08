@@ -183,7 +183,9 @@ namespace Meek
             if (file == null)
                 return new HttpNotFoundResult();
 
-            var generator = _thumbnailGenerators.Where(_ => _.WillProcess(file.ContentType) != null).OrderBy(_ => _).FirstOrDefault();
+            var temp = _thumbnailGenerators.Where(_ => _.WillProcess(file.FileName, file.ContentType) != null);
+
+            var generator = _thumbnailGenerators.Where(_ => _.WillProcess(file.FileName, file.ContentType) != null).OrderBy(_ => _).FirstOrDefault();
             if (generator == null)
                 return new HttpStatusCodeResult(500, "No thumbnail can be generated.");
 

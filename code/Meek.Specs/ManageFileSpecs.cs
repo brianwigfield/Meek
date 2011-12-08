@@ -113,30 +113,36 @@ namespace Meek.Specs
                 .WhenToldTo(x => x.GetRepository().GetFile("1"))
                 .Return(new MeekFile("TestFile.pdf", "application/pdf", GivenIt.IsAny<byte[]>()));
 
-            The<ThumbnailGenerator>()
-                .WhenToldTo(_ => _.WillProcess("application/pdf"))
+            _correctGenerator = An<ThumbnailGenerator>();
+            _correctGenerator
+                .WhenToldTo(_ => _.WillProcess("TestFile.pdf", "application/pdf"))
                 .Return(ThumbnailGenerationPriority.High);
 
-            The<ThumbnailGenerator>()
-                .WhenToldTo(_ => _.MakeThumbnail("application/pdf", GivenIt.IsAny<byte[]>(), "TestFile.pdf", 125))
+            _correctGenerator
+                .WhenToldTo(_ => _.MakeThumbnail("application/pdf", Param<byte[]>.IsAnything, "TestFile.pdf", 125))
                 .Return(new Thumbnail { Name = "TestFile.jpg", File = new byte[0], ContentType = System.Net.Mime.MediaTypeNames.Image.Jpeg });
+
+            _incorrectGenerator = An<ThumbnailGenerator>();
+            _incorrectGenerator
+                .WhenToldTo(_ => _.WillProcess("TestFile.pdf", "application/pdf"))
+                .Return((ThumbnailGenerationPriority?)null);
 
             The<Configuration.Configuration>()
                 .WhenToldTo(x => x.GetThumbnailGenerators())
-                .Return(new[] { The<ThumbnailGenerator>() });
+                .Return(new[] { _correctGenerator, _incorrectGenerator });
         };
 
         Because of = () =>
             _result = Subject.GetFileThumbnail("1");
 
         It Should_select_a_generator = () =>
-            The<ThumbnailGenerator>()
-                .WasToldTo(_ => _.WillProcess("application/pdf"))
+            _correctGenerator
+                .WasToldTo(_ => _.WillProcess("TestFile.pdf", "application/pdf"))
                 .OnlyOnce();
 
-        It Should_use_the_generator = () =>
-            The<ThumbnailGenerator>()
-                .WasToldTo(_ => _.MakeThumbnail("application/pdf", GivenIt.IsAny<byte[]>(), "TestFile.pdf", 125))
+        It Should_use_the_correct_generator = () =>
+            _correctGenerator
+                .WasToldTo(_ => _.MakeThumbnail("application/pdf", Param<byte[]>.IsAnything, "TestFile.pdf", 125))
                 .OnlyOnce();
 
         It Should_return_a_thumbnail = () =>
@@ -147,6 +153,8 @@ namespace Meek.Specs
         };
 
         static ActionResult _result;
+        static ThumbnailGenerator _incorrectGenerator;
+        static ThumbnailGenerator _correctGenerator;
     }
 
     public class when_asking_for_a_thumbnail_it_cant_generate : WithSubject<MeekTestController>
@@ -158,7 +166,7 @@ namespace Meek.Specs
                 .Return(new MeekFile("TestFile.pdf", "application/pdf", GivenIt.IsAny<byte[]>()));
 
             The<ThumbnailGenerator>()
-                .WhenToldTo(_ => _.WillProcess("application/pdf"))
+                .WhenToldTo(_ => _.WillProcess("test.file", "application/pdf"))
                 .Return((ThumbnailGenerationPriority?)null);
         };
 

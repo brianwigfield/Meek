@@ -8,17 +8,21 @@ namespace Meek.Content
     public class JpegThumbnailGenerator : ThumbnailGenerator
     {
         private readonly ImageResizer _resizer;
+        private readonly string[] _supportedfileTypes;
         private readonly string[] _supportedContentTypes;
 
         public JpegThumbnailGenerator(ImageResizer resizer)
         {
             _resizer = resizer;
-            _supportedContentTypes = new[] {"image/jpeg", "image/jpg", "image/gif", "image/png", "image/pjepg"};
+            _supportedfileTypes = new[] { ".jpg", ".jpeg", ".gif", ".png" };
+            _supportedContentTypes = new[] { "image/jpeg", "image/jpg", "image/gif", "image/png", "image/pjepg" };
         }
 
-        public ThumbnailGenerationPriority? WillProcess(string requestedType)
+        public ThumbnailGenerationPriority? WillProcess(string fileName, string contentType)
         {
-            return _supportedContentTypes.Any(_ => _ == requestedType) ? ThumbnailGenerationPriority.High : (ThumbnailGenerationPriority?)null;
+            return _supportedfileTypes.Any(_ => _ == Path.GetExtension(fileName)) || _supportedContentTypes.Any(_ => _ == contentType) 
+                ? ThumbnailGenerationPriority.High 
+                : (ThumbnailGenerationPriority?)null;
         }
 
         public Thumbnail MakeThumbnail(string contentType, byte[] file, string fileName, int width)

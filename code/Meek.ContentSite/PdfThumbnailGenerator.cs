@@ -6,7 +6,7 @@ namespace Meek.ContentSite
 {
     public class PdfThumbnailGenerator : ThumbnailGenerator
     {
-        public ThumbnailGenerationPriority? WillProcess(string contentType)
+        public ThumbnailGenerationPriority? WillProcess(string fileName, string contentType)
         {
             if (contentType == "application/pdf")
                 return ThumbnailGenerationPriority.High;
