@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RunSpecsCommand>
-      ..\code\packages\Machine.Specifications.0.4.8.0\tools\mspec-clr4.exe $(AdditionalSettings) ..\code\Meek.specs\bin\Release\Meek.specs.dll --html ../docs/Meek.specs.html
+      ..\code\packages\Machine.Specifications.0.5.0.0\tools\mspec-clr4.exe $(AdditionalSettings) ..\code\Meek.specs\bin\Release\Meek.specs.dll --html ../docs/Meek.specs.html
 	  </RunSpecsCommand>
     <NugetStandardPackCommand>
       nuget\NuGet.exe pack ../nuget/standard/meek.nuspec -OutputDirectory output 

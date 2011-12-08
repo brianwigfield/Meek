@@ -20,8 +20,8 @@ namespace Meek.Specs
 
         It should_be_the_correct_size = () =>
             {
-                _new.Width.ShouldEqual<int>(125);
-                _new.Height.ShouldEqual<int>(94);
+                _new.Width.ShouldEqual(125);
+                _new.Height.ShouldEqual(94);
             };
 
         static Image _original;

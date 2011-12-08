@@ -68,7 +68,11 @@
     <Compile Include="ContentVirtualFile.cs" />
     <Compile Include="Content\BrowseFiles.cs" />
     <Compile Include="Content\CreatePartial.cs" />
+    <Compile Include="Content\JpegThumbnailGenerator.cs" />
     <Compile Include="Content\Manage.cs" />
+    <Compile Include="Content\Thumbnail.cs" />
+    <Compile Include="Content\ThumbnailGenerator.cs" />
+    <Compile Include="Content\ThumbnailPriority.cs" />
     <Compile Include="Content\UploadFileSuccess.cs" />
     <Compile Include="DefaultImageResizer.cs" />
     <Compile Include="Extensions.cs" />

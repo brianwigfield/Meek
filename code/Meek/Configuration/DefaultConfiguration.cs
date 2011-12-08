@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Meek.Content;
 using Meek.Storage;
 
 namespace Meek.Configuration
@@ -58,6 +60,12 @@ namespace Meek.Configuration
         public ImageResizer GetImageResizer()
         {
             return DependencyResolver.Current.GetService<ImageResizer>() ?? new DefaultImageResizer();
+        }
+
+        public IEnumerable<ThumbnailGenerator> GetThumbnailGenerators()
+        {
+            return DependencyResolver.Current.GetServices<ThumbnailGenerator>()
+                .Union(new[] {new JpegThumbnailGenerator(GetImageResizer())});
         }
 
         private Repository RepositoryFactory()

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Machine.Fakes;
 using Machine.Specifications;
 using Meek.Storage;
@@ -135,9 +133,28 @@ namespace Meek.Specs.Storage.InMemory
             _result = Subject.GetFiles();
 
         It Should_return_the_list_of_images_in_storage = () =>
-            _result.Count().ShouldEqual<int>(3);
+            _result.Count().ShouldEqual(3);
 
-        static IEnumerable<string> _result;
+        static IDictionary<string,string> _result;
     }
+
+    public class When_removing_a_file : WithSubject<InMemoryRepository>
+    {
+        Establish that = () =>
+        {
+            _fileId = Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg",
+                                                    Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                                                        "Meek.Specs.UploadFile.jpg").ReadFully()));
+        };
+
+        Because of = () =>
+            Subject.RemoveFile(_fileId);
+
+        It Should_no_longer_contain_the_image = () =>
+            Subject.GetFiles().Count().ShouldEqual(0);
+
+        static string _fileId;
+    }
+
 
 }

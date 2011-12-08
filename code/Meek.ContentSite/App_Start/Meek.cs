@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Web.Mvc;
+using Meek.Content;
 using Meek.Storage;
 using Microsoft.Practices.Unity;
 
@@ -15,6 +16,7 @@ namespace Meek.ContentSite.App_Start
 
             var container = new UnityContainer();
             container.RegisterType<Repository, InMemoryRepository>(new ContainerControlledLifetimeManager());
+            container.RegisterType<ThumbnailGenerator, PdfThumbnailGenerator>("PDF", new ContainerControlledLifetimeManager());
             DependencyResolver.SetResolver(new UnityResolver(container));
 
             //Do this to setup the test data before Initialize() for automated tests using InMemoryRepository

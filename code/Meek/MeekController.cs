@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using System.Reflection;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Web;
 using System.Linq;
 using System.Web.Mvc;
@@ -19,23 +15,23 @@ namespace Meek
 
         readonly Repository _repository;
         readonly Authorization _auth;
-        readonly ImageResizer _resizer;
+        readonly IEnumerable<ThumbnailGenerator> _thumbnailGenerators;
         readonly Configuration.Configuration _config;
 
         public MeekController()
         {
+            _config = BootStrapper.Configuration;
             _repository = BootStrapper.Configuration.GetRepository();
             _auth = BootStrapper.Configuration.GetAuthorization();
-            _resizer = BootStrapper.Configuration.GetImageResizer();
-            _config = BootStrapper.Configuration;
+            _thumbnailGenerators = BootStrapper.Configuration.GetThumbnailGenerators();
         }
 
         protected MeekController(Configuration.Configuration config)
         {
             _config = config;
-            _repository = config.GetRepository(); ;
+            _repository = config.GetRepository();
             _auth = config.GetAuthorization();
-            _resizer = config.GetImageResizer();
+            _thumbnailGenerators = config.GetThumbnailGenerators();
         }
 
         private ViewResult MeekResult(string view, object model)
@@ -187,28 +183,35 @@ namespace Meek
             if (file == null)
                 return new HttpNotFoundResult();
 
-            var img = _resizer.Resize(new Bitmap(new MemoryStream(file.Contents)), 125);
-            var output = new MemoryStream();
-            img.Save(output, System.Drawing.Imaging.ImageFormat.Jpeg);
+            var generator = _thumbnailGenerators.Where(_ => _.WillProcess(file.ContentType) != null).OrderBy(_ => _).FirstOrDefault();
+            if (generator == null)
+                return new HttpStatusCodeResult(500, "No thumbnail can be generated.");
 
-            return File(output.ToArray(), System.Net.Mime.MediaTypeNames.Image.Jpeg, file.FileName);
+            var thumbnail = generator.MakeThumbnail(file.ContentType, file.Contents, file.FileName, width);
+            return File(thumbnail.File, thumbnail.ContentType, thumbnail.Name);
         }
 
         public ActionResult BrowseFiles(string type, string ckEditor, string ckEditorFuncNum)
         {
 
-            return MeekResult("BrowseFiles", new BrowseFiles() { Files = _repository.GetFiles(), Callback = ckEditorFuncNum });
+            return MeekResult("BrowseFiles", new BrowseFiles { Files = _repository.GetFiles(), Callback = ckEditorFuncNum });
         }
 
         public ActionResult UploadFile(HttpPostedFileBase upload, string ckEditorFuncNum)
         {
-            var fileID = _repository.SaveFile(new MeekFile(upload.FileName, upload.ContentType, upload.InputStream.ReadFully()));
-            var model = new UploadFileSuccess()
+            var fileId = _repository.SaveFile(new MeekFile(upload.FileName, upload.ContentType, upload.InputStream.ReadFully()));
+            var model = new UploadFileSuccess
                             {
                                 Callback = ckEditorFuncNum,
-                                Url = "/Meek/GetFile/" + fileID
+                                Url = "/Meek/GetFile/" + fileId
                             };
             return View("UploadFileSuccess", model);
+        }
+
+        public ActionResult RemoveFile(string id)
+        {
+            _repository.RemoveFile(id);
+            return Redirect("/Meek/BrowseFiles");
         }
 
     }

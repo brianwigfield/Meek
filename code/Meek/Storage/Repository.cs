@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 
 namespace Meek.Storage
 {
@@ -11,7 +10,8 @@ namespace Meek.Storage
         void Save(string route, MeekContent content);
         void Remove(string route);
         string SaveFile(MeekFile file);
-        MeekFile GetFile(string fileID);
-        IEnumerable<string> GetFiles();
+        MeekFile GetFile(string fileId);
+        IDictionary<string,string> GetFiles();
+        void RemoveFile(string fileId);
     }
 }

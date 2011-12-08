@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Machine.Fakes;
 using Machine.Specifications;
-using Machine.Specifications.Model;
 using Meek.Storage;
 
 namespace Meek.Specs.Storage.FileSystem
@@ -166,13 +163,32 @@ namespace Meek.Specs.Storage.FileSystem
 
         Cleanup The_records_from_storage = () =>
         {
-            foreach (var fileID in _result)
+            foreach (var file in _result)
             {
-                Subject.RemoveFile(fileID);
+                Subject.RemoveFile(file.Key);
             }
         };
 
-        static IEnumerable<string> _result;
+        static IDictionary<string,string> _result;
+    }
+
+    public class When_removing_a_file : WithSubject<FileSystemRepository>
+    {
+        Establish that = () =>
+        {
+            Subject = new FileSystemRepository("Storage");
+            _fileId = Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg",
+                                                    Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                                                        "Meek.Specs.UploadFile.jpg").ReadFully()));
+        };
+
+        Because of = () =>
+            Subject.RemoveFile(_fileId);
+
+        It Should_no_longer_contain_the_image = () =>
+            Subject.GetFiles().Count().ShouldEqual(0);
+
+        static string _fileId;
     }
 
 }

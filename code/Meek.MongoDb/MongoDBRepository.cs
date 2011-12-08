@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Security;
-using System.Text;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
@@ -91,9 +90,9 @@ namespace Meek.Storage
         }
 
         [SecurityCritical]
-        public IEnumerable<string> GetFiles()
+        public IDictionary<string, string> GetFiles()
         {
-            return Files.FindAll().Select(x => x["_id"].AsString);
+            return Files.FindAll().ToDictionary(_ => _["_id"].AsString, _ => _["FileName"].AsString);
         }
 
         [SecurityCritical]

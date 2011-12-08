@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Meek.Configuration;
@@ -65,11 +61,11 @@ namespace Meek.Specs
 
                 The<Configuration.Configuration>()
                     .WhenToldTo(x => x.GetRepository().GetFiles())
-                    .Return(new List<string>()
+                    .Return(new Dictionary<string, string>
                                 {
-                                    "one",
-                                    "two",
-                                    "three"
+                                    {"one","one.name"},
+                                    {"two", "two.name"},
+                                    {"three", "three.name"}
                                 });
             };
 
@@ -103,40 +99,95 @@ namespace Meek.Specs
         It Should_return_the_file = () =>
             {
                 _result.AssertResultIs<FileResult>();
-                _result.AssertResultIs<FileResult>().FileDownloadName.ShouldEqual<string>("blah.jpg");
+                _result.AssertResultIs<FileResult>().FileDownloadName.ShouldEqual("blah.jpg");
             };
 
         static ActionResult _result;
     }
 
-    public class When_asking_for_an_image_thumbnail : WithSubject<MeekTestController>
+    public class When_asking_for_a_thumbnail_it_can_generate : WithSubject<MeekTestController>
     {
-
         Establish that = () =>
-            {
-                The<Configuration.Configuration>()
-                    .WhenToldTo(x => x.GetRepository().GetFile("test"))
-                    .Return(new MeekFile("blah.jpg", "image/jpeg", Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Specs.UploadFile.jpg").ReadFully()));
+        {
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetRepository().GetFile("1"))
+                .Return(new MeekFile("TestFile.pdf", "application/pdf", GivenIt.IsAny<byte[]>()));
 
-                The<Configuration.Configuration>()
-                    .WhenToldTo(x => x.GetImageResizer().Resize(GivenIt.IsAny<Image>(), 125))
-                    .Return(new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Specs.UploadFile.jpg")));
+            The<ThumbnailGenerator>()
+                .WhenToldTo(_ => _.WillProcess("application/pdf"))
+                .Return(ThumbnailGenerationPriority.High);
 
-            };
+            The<ThumbnailGenerator>()
+                .WhenToldTo(_ => _.MakeThumbnail("application/pdf", GivenIt.IsAny<byte[]>(), "TestFile.pdf", 125))
+                .Return(new Thumbnail { Name = "TestFile.jpg", File = new byte[0], ContentType = System.Net.Mime.MediaTypeNames.Image.Jpeg });
 
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetThumbnailGenerators())
+                .Return(new[] { The<ThumbnailGenerator>() });
+        };
 
         Because of = () =>
-            _result = Subject.GetFileThumbnail("test", 125);
+            _result = Subject.GetFileThumbnail("1");
 
-        It Should_use_the_resizer_for_the_image = () =>
-            The<Configuration.Configuration>()
-                .WasToldTo(x => x.GetImageResizer().Resize(GivenIt.IsAny<Image>(), 125));
+        It Should_select_a_generator = () =>
+            The<ThumbnailGenerator>()
+                .WasToldTo(_ => _.WillProcess("application/pdf"))
+                .OnlyOnce();
 
-        It Should_return_the_file = () =>
+        It Should_use_the_generator = () =>
+            The<ThumbnailGenerator>()
+                .WasToldTo(_ => _.MakeThumbnail("application/pdf", GivenIt.IsAny<byte[]>(), "TestFile.pdf", 125))
+                .OnlyOnce();
+
+        It Should_return_a_thumbnail = () =>
         {
-            _result.AssertResultIs<FileResult>();
-            _result.AssertResultIs<FileResult>().FileDownloadName.ShouldEqual<string>("blah.jpg");
+            _result.AssertResultIs<FileContentResult>();
+            ((FileContentResult)_result).ContentType.ShouldEqual(System.Net.Mime.MediaTypeNames.Image.Jpeg);
+            ((FileContentResult)_result).FileDownloadName.ShouldEqual("TestFile.jpg");
         };
+
+        static ActionResult _result;
+    }
+
+    public class when_asking_for_a_thumbnail_it_cant_generate : WithSubject<MeekTestController>
+    {
+        Establish that = () =>
+        {
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetRepository().GetFile("1"))
+                .Return(new MeekFile("TestFile.pdf", "application/pdf", GivenIt.IsAny<byte[]>()));
+
+            The<ThumbnailGenerator>()
+                .WhenToldTo(_ => _.WillProcess("application/pdf"))
+                .Return((ThumbnailGenerationPriority?)null);
+        };
+
+        Because of = () =>
+            _result = Subject.GetFileThumbnail("1");
+
+        It Should_return_a_500_error = () =>
+            _result.AssertResultIs<HttpStatusCodeResult>().StatusCode.Equals(500);
+
+        static ActionResult _result;
+    }
+
+    public class When_removing_a_file : WithSubject<MeekTestController>
+    {
+        Establish that = () =>
+            The<Configuration.Configuration>()
+                .WhenToldTo(_ => _.GetRepository())
+                .Return(The<Repository>());
+
+        Because of = () =>
+            _result = Subject.RemoveFile("new.file");
+
+        It Should_of_told_the_repository_to_remove_the_file = () =>
+            The<Repository>()
+                .WasToldTo(_ => _.RemoveFile("new.file"))
+                .OnlyOnce();
+
+        It Should_return_to_the_browse_page = () =>
+            _result.AssertHttpRedirect().Url.ShouldEqual("/Meek/BrowseFiles");
 
         static ActionResult _result;
     }

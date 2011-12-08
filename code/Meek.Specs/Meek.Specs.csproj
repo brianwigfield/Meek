@@ -73,6 +73,7 @@
     <Compile Include="Storage\MongoDbSpecs.cs" />
     <Compile Include="Storage\SQLStorageSpecs.cs" />
     <Compile Include="Storage\InMemoryStorageSpecs.cs" />
+    <Compile Include="ThumbnailGeneratorSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

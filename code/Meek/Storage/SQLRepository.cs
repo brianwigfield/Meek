@@ -195,20 +195,22 @@ namespace Meek.Storage
             }
         }
 
-        public IEnumerable<string> GetFiles()
+        public IDictionary<string,string> GetFiles()
         {
             using (var conn = OpenConnection())
             {
                 var command = _factory.CreateCommand();
                 command.Connection = conn;
-                command.CommandText = "SELECT Id FROM MeekFile";
+                command.CommandText = "SELECT Id, FileName FROM MeekFile";
 
                 var reader = command.ExecuteReader(CommandBehavior.CloseConnection);
+                var output = new Dictionary<string, string>();
                 while (reader.Read())
                 {
-                    yield return reader.GetString(0);
+                    output.Add(reader.GetString(0), reader.GetString(1));
                 }
 
+                return output;
             }
         }
 

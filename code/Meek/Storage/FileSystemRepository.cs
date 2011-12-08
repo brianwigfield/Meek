@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -140,9 +139,11 @@ namespace Meek.Storage
                                 File.ReadAllBytes(filePath));
         }
 
-        public IEnumerable<string> GetFiles()
+        public IDictionary<string,string> GetFiles()
         {
-            return DataFile.Element("Meek").Elements("file").Select(x => x.Attribute("fileName").Value);
+            return DataFile.Element("Meek").Elements("file")
+                .Select(x => new { Id = x.Attribute("fileName").Value, Name = x.Attribute("originalFileName").Value })
+                .ToDictionary(_ => _.Id, _=> _.Name);
         }
 
         public void RemoveFile(string fileId)

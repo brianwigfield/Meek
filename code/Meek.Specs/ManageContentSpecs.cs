@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -9,7 +6,6 @@ using Machine.Fakes;
 using Machine.Specifications;
 using Meek.Configuration;
 using Meek.Storage;
-using Moq;
 using MvcContrib.TestHelper;
 using It = Machine.Specifications.It;
 using GivenIt = Moq.It;

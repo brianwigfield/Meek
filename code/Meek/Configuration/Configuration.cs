@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Meek.Content;
 using Meek.Storage;
 
 namespace Meek.Configuration
@@ -13,6 +15,6 @@ namespace Meek.Configuration
         Repository GetRepository();
         Authorization GetAuthorization();
         ImageResizer GetImageResizer();
-
+        IEnumerable<ThumbnailGenerator> GetThumbnailGenerators();
     }
 }

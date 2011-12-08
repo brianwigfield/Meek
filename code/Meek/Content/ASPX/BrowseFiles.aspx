@@ -10,10 +10,12 @@
       }
     </script>
 
-    <% foreach (var fileId in Model.Files) { %>
+    <% foreach (var file in Model.Files) { %>
 
-    <div style="float:left; width:150px;">
-      <img src="/Meek/GetFileThumbnail/<%=fileId%>" onclick="callBack('<%=fileId%>');" />
+    <div class="meekBrowsingFile"  style="float:left; width:150px;">
+        <img src="/Meek/GetFileThumbnail/<%=file.Key%>" onclick="callBack('<%=file.Key%>');" />
+        <label><%=file.Value %></label>
+        <a href="/Meek/RemoveFile/<%=file.Key%>">Delete</a>
     </div>
 
     <%}%>

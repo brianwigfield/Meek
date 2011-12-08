@@ -6,6 +6,6 @@ namespace Meek.Content
     {
         public string Callback { get; set; }
         public string Message { get; set; }
-        public IEnumerable<string> Files { get; set; }
+        public IDictionary<string,string> Files { get; set; }
     }
 }

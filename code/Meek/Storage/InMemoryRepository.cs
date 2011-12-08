@@ -68,9 +68,14 @@ namespace Meek.Storage
             return Files.SingleOrDefault(x => x.Key.ToLower() == fileId.ToLower()).Value;
         }
 
-        public IEnumerable<string> GetFiles()
+        public IDictionary<string,string> GetFiles()
         {
-            return Files.Select(x => x.Key);
+            return Files.ToDictionary(_ => _.Key, _ => _.Value.FileName);
+        }
+
+        public void RemoveFile(string fileId)
+        {
+            Files.Remove(fileId);
         }
 
         private IDictionary<string, MeekFile> Files { get; set; }
