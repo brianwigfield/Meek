@@ -2,7 +2,7 @@
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>Meek</id>
-    <version>0.80.5</version>
+    <version>0.80.6</version>
     <authors>Brian Wigfield</authors>
     <owners>AdventureTech</owners>
     <projectUrl>http://www.gingerrant.com/meek/</projectUrl>

@@ -125,7 +125,7 @@ namespace Meek.Specs
             _incorrectGenerator = An<ThumbnailGenerator>();
             _incorrectGenerator
                 .WhenToldTo(_ => _.WillProcess("TestFile.pdf", "application/pdf"))
-                .Return((ThumbnailGenerationPriority?)null);
+                .Return(ThumbnailGenerationPriority.Low);
 
             The<Configuration.Configuration>()
                 .WhenToldTo(x => x.GetThumbnailGenerators())

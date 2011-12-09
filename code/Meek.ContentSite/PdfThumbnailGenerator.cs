@@ -11,7 +11,7 @@ namespace Meek.ContentSite
             if (contentType == "application/pdf")
                 return ThumbnailGenerationPriority.High;
             else
-                return null;
+                return ThumbnailGenerationPriority.Low;
         }
 
         public Thumbnail MakeThumbnail(string contentType, byte[] file, string fileName, int width)
