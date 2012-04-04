@@ -80,6 +80,8 @@
     <Compile Include="HttpNotFoundViewResult.cs" />
     <Compile Include="ImageResizer.cs" />
     <Compile Include="MeekController.cs" />
+    <Compile Include="RepositoryCacheDependency.cs" />
+    <Compile Include="Storage\ResourceChangedArgs.cs" />
     <Compile Include="Storage\MeekFile.cs" />
     <Compile Include="MeekRoute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

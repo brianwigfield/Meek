@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Meek.Storage
+﻿namespace Meek.Storage
 {
     public class MeekContent
     {

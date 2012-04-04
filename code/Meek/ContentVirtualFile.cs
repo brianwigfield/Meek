@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.Hosting;
 using Meek.Configuration;
 using Meek.Storage;
@@ -14,15 +11,14 @@ namespace Meek
     {
         readonly string _pathKey;
         readonly Repository _repository;
-        readonly Authorization _auth;
         readonly ViewEngineOptions _viewEngine;
+        const string EditLink = "<div class=\"MeekEditLink\"><a href=\"/Meek/Manage?aspxerrorpath={0}\">Edit Content</a></div>";
 
-        public ContentVirtualFile(Repository repository, string requestedPath, string pathKey, Authorization auth, ViewEngineOptions viewEngine)
+        public ContentVirtualFile(Repository repository, string requestedPath, string pathKey, ViewEngineOptions viewEngine)
             : base(requestedPath)
         {
             _pathKey = pathKey;
             _repository = repository;
-            _auth = auth;
             _viewEngine = viewEngine;
         }
 
@@ -30,17 +26,13 @@ namespace Meek
         {
             var content = _repository.Get(_pathKey);
             var contentMarkup = content.Contents;
-
-            var httpContext = HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current);
-
-            if (_auth.IsContentAdmin(httpContext))
-                contentMarkup = AddEditLinkMarkup(contentMarkup, content.Partial);
-
             var constructedContent = string.Empty;
+
             switch (_viewEngine.Type)
             {
                 case ViewEngineType.Razor:
                     contentMarkup = contentMarkup.Replace("@", "@@");
+                    contentMarkup = AddRazorEditLinkMarkup(contentMarkup, content.Partial);
                     constructedContent = string.Format(
                         "@{{ {0} ViewBag.Title = \"{1}\";}} {2}",
                         content.Partial ? " Layout = null;" : null,
@@ -48,6 +40,7 @@ namespace Meek
                         contentMarkup);
                     break;
                 case ViewEngineType.ASPX:
+                    contentMarkup = AddWebformsEditLinkMarkup(contentMarkup, content.Partial);
                     if (!content.Partial)
                         contentMarkup = string.Format(
                             @"<asp:Content ID=""MeekContents"" ContentPlaceHolderID=""{0}"" runat=""server"">{1}</asp:Content>",
@@ -63,25 +56,24 @@ namespace Meek
             return new MemoryStream(Encoding.UTF8.GetBytes(constructedContent));
         }
 
-        private string AddEditLinkMarkup(string content, bool partial)
+        private string AddRazorEditLinkMarkup(string content, bool isPartial)
         {
-            if (partial || content.IndexOf(@"</html>") == -1)
-            {
-                content +=
-                    string.Format(
-                        "<div class=\"MeekEditLink\"><a href=\"/Meek/Manage?aspxerrorpath={0}\">Edit Content</a></div>",
-                        _pathKey);
-            }
+            var editLink = string.Format(Environment.NewLine + "@if(ViewBag.IsContentAdmin){{" + EditLink + "}}", _pathKey);
+
+            if (isPartial || content.IndexOf(@"</html>") == -1)
+                return content + editLink;
             else
-            {
-                content = content.Insert(content.IndexOf(@"</html>"),
-                                         string.Format(
-                                             "<div class=\"MeekEditLink\"><a href=\"/Meek/Manage?aspxerrorpath={0}\">Edit Content</a></div>",
-                                             _pathKey));
-            }
+                return content.Insert(content.IndexOf(@"</html>"), editLink);
+        }
 
-            return content;
+        private string AddWebformsEditLinkMarkup(string content, bool isPartial)
+        {
+            var editLink = string.Format(Environment.NewLine + "<% if(ViewBag.IsContentAdmin) {{ %>" + EditLink + "<% }} %>", _pathKey);
 
+            if (isPartial || content.IndexOf(@"</html>") == -1)
+                return content + editLink;
+            else
+                return content.Insert(content.IndexOf(@"</html>"), editLink);
         }
 
     }

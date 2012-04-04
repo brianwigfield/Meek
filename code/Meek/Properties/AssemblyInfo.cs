@@ -9,7 +9,7 @@ using System.Web.UI;
 [assembly: AssemblyTitle("Meek")]
 [assembly: AssemblyDescription("Meek CMS")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("AdventureTech Group")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Meek")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
@@ -33,5 +33,5 @@ using System.Web.UI;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.80.5.0")]
-[assembly: AssemblyFileVersion("0.80.5.0")]
+[assembly: AssemblyVersion("0.90.0.0")]
+[assembly: AssemblyFileVersion("0.90.0.0")]

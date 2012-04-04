@@ -147,6 +147,7 @@ namespace Meek
 
         public ActionResult GetContent()
         {
+            ViewBag.IsContentAdmin = _auth.IsContentAdmin(HttpContext);
             return View(((Route)Url.RequestContext.RouteData.Route).Url);
         }
 
@@ -157,9 +158,12 @@ namespace Meek
                 content = content.Substring(1);
 
             if (_repository.Exists(content))
+            {
+                ViewBag.IsContentAdmin = _auth.IsContentAdmin(HttpContext);
                 return View(content);
+            }
 
-            var model = new CreatePartial()
+            var model = new CreatePartial
                             {
                                 CreateLink = @"/" + _config.AltManageContentRoute + "?aspxerrorpath=" + content + "&partial=true",
                                 IsContentAdmin = _auth.IsContentAdmin(HttpContext)
@@ -217,6 +221,8 @@ namespace Meek
             _repository.RemoveFile(id);
             return Redirect("/Meek/BrowseFiles");
         }
+
+
 
     }
 

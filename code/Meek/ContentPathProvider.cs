@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Caching;
@@ -59,7 +60,7 @@ namespace Meek
                     return true;
 
                 var repository = _config.GetRepository();
-                exists = repository.Exists(TranslateVirtualPath(virtualPath).Replace(_extension, string.Empty));
+                exists = repository.Exists(TranslateVirtualPathNoExt(virtualPath));
             }
             return exists;
         }
@@ -73,12 +74,12 @@ namespace Meek
                 return GetInternalResource(virtualPath);
 
             var repository = _config.GetRepository();
-            if (IsMeekPath(virtualPath) && repository.Exists(TranslateVirtualPath(virtualPath).Replace(_extension, string.Empty)))
+            var pathTranslated = TranslateVirtualPathNoExt(virtualPath);
+            if (IsMeekPath(virtualPath) && repository.Exists(pathTranslated))
                 return new ContentVirtualFile(
                     repository, 
                     virtualPath, 
-                    TranslateVirtualPath(virtualPath).Replace(_extension, null), 
-                    _config.GetAuthorization(),
+                    pathTranslated, 
                     _config.ViewEngineOptions);
 
             return null;
@@ -90,6 +91,11 @@ namespace Meek
                 virtualPath = virtualPath.Substring(1);
 
             return virtualPath.StartsWith(VPathPrefix, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private string TranslateVirtualPathNoExt(string virtualPath)
+        {
+            return TranslateVirtualPath(virtualPath).Replace(_extension, null);
         }
 
         private static string TranslateVirtualPath(string virtualPath)
@@ -104,16 +110,16 @@ namespace Meek
         {
             if (_baseProvider != null && _baseProvider.FileExists(virtualPath))
                 return base.GetCacheDependency(virtualPath, virtualPathDependencies, utcStart);
-
-            return null;
+            
+            return new RepositoryCacheDependency(_config.GetRepository(), TranslateVirtualPathNoExt(virtualPath));
         }
 
         public override string GetFileHash(string virtualPath, IEnumerable virtualPathDependencies)
         {
             if (_baseProvider != null && _baseProvider.FileExists(virtualPath))
                 return base.GetFileHash(virtualPath, virtualPathDependencies);
-            
-            return null;
+
+            return Encoding.ASCII.GetString(new MD5CryptoServiceProvider().ComputeHash(Encoding.ASCII.GetBytes(virtualPath)));
         }
 
         private bool IsInternalResource(string virtualPath)
@@ -132,6 +138,5 @@ namespace Meek
 
             return new VirtualFileStream(new MemoryStream(Encoding.UTF8.GetBytes(resourceString)), virtualPath);
         }
-
     }
 }

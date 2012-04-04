@@ -9,6 +9,9 @@ namespace Meek.Specs.Storage.InMemory
 {
     public class When_saving_content_to_storage : WithSubject<InMemoryRepository>
     {
+        Establish that = () =>
+            Subject.ContentChanged += (sender, e) => _lastChangedContent = e.Path;
+
         Because of = () =>
         {
             Subject.Save("MADE/up/route", new MeekContent("title", "my testing content here", false));
@@ -34,6 +37,11 @@ namespace Meek.Specs.Storage.InMemory
 
         It Should_return_it_in_route_list = () =>
             Subject.AvailableRoutes(null).FirstOrDefault(x => x == "MADE/up/route").ShouldNotBeNull();
+
+        It Should_trigger_changed_event = () =>
+            _lastChangedContent.ShouldEqual("made/up/Partial");
+
+        static string _lastChangedContent;
     }
 
     public class When_asking_for_full_routes : With_Test_Data
@@ -71,11 +79,19 @@ namespace Meek.Specs.Storage.InMemory
 
     public class When_deleting_content : With_Test_Data
     {
+        Establish that = () =>
+            Subject.ContentChanged += (sender, e) => _changedContent = e.Path;
+
         Because of = () =>
             Subject.Remove("route/number/one");
 
         It Should_not_contain_the_route_anymore = () =>
             Subject.Exists("route/number/one").ShouldBeFalse();
+
+        It Should_trigger_changed_event = () =>
+            _changedContent.ShouldEqual("route/number/one");
+
+        static string _changedContent;
     }
 
     public class With_Test_Data : WithSubject<InMemoryRepository>
@@ -92,6 +108,8 @@ namespace Meek.Specs.Storage.InMemory
 
     public class When_saving_a_file_to_storage : WithSubject<InMemoryRepository>
     {
+        Establish that = () =>
+            Subject.FileChanged += (sender, e) => _changedFile = e.Path;
 
         Because of = () =>
             _fileId = Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg", _fileData));
@@ -109,8 +127,12 @@ namespace Meek.Specs.Storage.InMemory
         It Should_generate_a_file_id = () =>
             _fileId.ShouldNotBeEmpty();
 
+        It Should_trigger_changed_event = () =>
+            _changedFile.ShouldEqual(_fileId);
+
         static byte[] _fileData = Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Specs.UploadFile.jpg").ReadFully();
         static string _fileId;
+        static string _changedFile;
     }
 
     public class When_asking_to_browse_image_files : WithSubject<InMemoryRepository>
@@ -141,11 +163,13 @@ namespace Meek.Specs.Storage.InMemory
     public class When_removing_a_file : WithSubject<InMemoryRepository>
     {
         Establish that = () =>
-        {
-            _fileId = Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg",
-                                                    Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                                                        "Meek.Specs.UploadFile.jpg").ReadFully()));
-        };
+            {
+                _fileId = Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg",
+                                                        Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                                                            "Meek.Specs.UploadFile.jpg").ReadFully()));
+
+                Subject.FileChanged += (sender, e) => _changedFile = e.Path;
+            };
 
         Because of = () =>
             Subject.RemoveFile(_fileId);
@@ -153,8 +177,11 @@ namespace Meek.Specs.Storage.InMemory
         It Should_no_longer_contain_the_image = () =>
             Subject.GetFiles().Count().ShouldEqual(0);
 
-        static string _fileId;
-    }
+        It Should_trigger_changed_event = () =>
+            _changedFile.ShouldEqual(_fileId);
 
+        static string _fileId;
+        static string _changedFile;
+    }
 
 }

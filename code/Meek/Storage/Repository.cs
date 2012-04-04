@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Meek.Storage
 {
     public interface Repository
     {
+        event EventHandler<ResourceChangedArgs> FileChanged;
+        event EventHandler<ResourceChangedArgs> ContentChanged;
         MeekContent Get(string route);
         bool Exists(string route);
         IEnumerable<string> AvailableRoutes(ContentTypes? type);

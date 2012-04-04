@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Meek.Storage
 {
     public class InMemoryRepository : Repository
     {
+        public event EventHandler<ResourceChangedArgs> FileChanged;
+        public event EventHandler<ResourceChangedArgs> ContentChanged;
+
         public InMemoryRepository()
         {
             Content = new Dictionary<string, MeekContent>();
@@ -47,6 +49,8 @@ namespace Meek.Storage
             else
                 Content.Add(route, content);
 
+            if (ContentChanged != null)
+                ContentChanged(this, new ResourceChangedArgs { Path = route });
         }
 
         public void Remove(string route)
@@ -54,12 +58,19 @@ namespace Meek.Storage
             var caseSensitiveKey = Content.Select(x => x.Key).FirstOrDefault(x => x.ToLower() == route.ToLower());
             if (!string.IsNullOrEmpty(caseSensitiveKey))
                 Content.Remove(caseSensitiveKey);
+
+            if (ContentChanged != null)
+                ContentChanged(this, new ResourceChangedArgs { Path = route });
         }
 
         public string SaveFile(MeekFile file)
         {
             var fileId = Guid.NewGuid().ToString();
             Files.Add(fileId, file);
+
+            if (FileChanged != null)
+                FileChanged(this, new ResourceChangedArgs {Path = fileId});
+
             return fileId;
         }
 
@@ -76,6 +87,9 @@ namespace Meek.Storage
         public void RemoveFile(string fileId)
         {
             Files.Remove(fileId);
+            
+            if (FileChanged != null)
+                FileChanged(this, new ResourceChangedArgs { Path = fileId });
         }
 
         private IDictionary<string, MeekFile> Files { get; set; }

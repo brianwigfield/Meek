@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Machine.Fakes;
 using Machine.Specifications;
 using Meek.Storage;
 
-namespace Meek.Specs.Storage
+namespace Meek.Specs.Storage.MongoDb
 {
 
     public class When_saving_content_to_storage : WithSubject<MongoDbRepository>
     {
         Establish that = () =>
-            Subject = new MongoDbRepository("MongoDbTest");
+            {
+                Subject = new MongoDbRepository("MongoDbTest");
+                Subject.ContentChanged += (sender, e) => _lastChangedContent = e.Path;
+            };
 
         Because of = () =>
         {
@@ -42,11 +43,16 @@ namespace Meek.Specs.Storage
             Subject.AvailableRoutes(null).FirstOrDefault(x => x == "made/up/route").
                 ShouldNotBeNull();
 
+        It Should_trigger_changed_event = () =>
+            _lastChangedContent.ShouldEqual("made/up/Partial");
+
         Cleanup The_records_from_storage = () =>
         {
             Subject.Remove("made/up/route");
             Subject.Remove("made/up/partial");
         };
+
+        static string _lastChangedContent;
 
     }
 
@@ -85,11 +91,19 @@ namespace Meek.Specs.Storage
 
     public class When_deleting_content : With_Test_Data
     {
+        Establish that = () =>
+            Subject.ContentChanged += (sender, e) => _changedContent = e.Path;
+
         Because of = () =>
             Subject.Remove("route/number/one");
 
         It Should_not_contain_the_route_anymore = () =>
             Subject.Exists("route/number/one").ShouldBeFalse();
+
+        It Should_trigger_changed_event = () =>
+            _changedContent.ShouldEqual("route/number/one");
+
+        static string _changedContent;
     }
 
     public class With_Test_Data : WithSubject<MongoDbRepository>
@@ -115,7 +129,10 @@ namespace Meek.Specs.Storage
     {
 
         Establish that = () =>
-           Subject = new MongoDbRepository("MongoDbTest");
+            {
+                Subject = new MongoDbRepository("MongoDbTest");
+                Subject.FileChanged += (sender, e) => _changedFile = e.Path;
+            };
 
         Because of = () =>
             _fileId = Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg", _fileData));
@@ -133,11 +150,15 @@ namespace Meek.Specs.Storage
         It Should_generate_a_file_id = () =>
             _fileId.ShouldNotBeEmpty();
 
+        It Should_trigger_changed_event = () =>
+            _changedFile.ShouldEqual(_fileId);
+
         Cleanup The_records_from_storage = () =>
             Subject.RemoveFile(_fileId);
 
         static byte[] _fileData = Assembly.GetExecutingAssembly().GetManifestResourceStream("Meek.Specs.UploadFile.jpg").ReadFully();
         static string _fileId;
+        static string _changedFile;
     }
 
     public class When_asking_to_browse_image_files : WithSubject<MongoDbRepository>
@@ -183,6 +204,7 @@ namespace Meek.Specs.Storage
             _fileId = Subject.SaveFile(new MeekFile("Test.jpg", "image/jpeg",
                                                     Assembly.GetExecutingAssembly().GetManifestResourceStream(
                                                         "Meek.Specs.UploadFile.jpg").ReadFully()));
+            Subject.FileChanged += (sender, e) => _changedFile = e.Path;
         };
 
         Because of = () =>
@@ -191,7 +213,11 @@ namespace Meek.Specs.Storage
         It Should_no_longer_contain_the_image = () =>
             Subject.GetFiles().Count().ShouldEqual(0);
 
+        It Should_trigger_changed_event = () =>
+            _changedFile.ShouldEqual(_fileId);
+
         static string _fileId;
+        static string _changedFile;
     }
 
 }

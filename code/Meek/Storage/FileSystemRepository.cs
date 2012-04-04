@@ -11,6 +11,8 @@ namespace Meek.Storage
     public class FileSystemRepository : Repository
     {
         readonly string _baseDir;
+        public event EventHandler<ResourceChangedArgs> FileChanged;
+        public event EventHandler<ResourceChangedArgs> ContentChanged;
 
         public FileSystemRepository(string baseDir)
         {
@@ -90,6 +92,8 @@ namespace Meek.Storage
 
             DataFile = parent.Document;
 
+            if (ContentChanged != null)
+                ContentChanged(this, new ResourceChangedArgs { Path = route });
         }
 
         public void Remove(string route)
@@ -102,6 +106,9 @@ namespace Meek.Storage
             var modifiedDoc = element.Document;
             element.Remove();
             DataFile = modifiedDoc;
+
+            if (ContentChanged != null)
+                ContentChanged(this, new ResourceChangedArgs { Path = route });
         }
 
         public string SaveFile(MeekFile file)
@@ -122,6 +129,9 @@ namespace Meek.Storage
             stream.Close();
 
             DataFile = parent.Document;
+            if (FileChanged != null)
+                FileChanged(this, new ResourceChangedArgs { Path = fileKey });
+
             return fileKey;
         }
 
@@ -156,8 +166,10 @@ namespace Meek.Storage
             var modifiedDoc = element.Document;
             element.Remove();
             DataFile = modifiedDoc;
-        }
 
+            if (FileChanged != null)
+                FileChanged(this, new ResourceChangedArgs { Path = fileId });
+        }
 
         private XDocument DataFile
         {

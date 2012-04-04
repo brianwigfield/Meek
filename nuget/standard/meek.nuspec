@@ -2,9 +2,9 @@
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>Meek</id>
-    <version>0.80.6</version>
+    <version>0.90.0</version>
     <authors>Brian Wigfield</authors>
-    <owners>AdventureTech</owners>
+    <owners></owners>
     <projectUrl>http://www.gingerrant.com/meek/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>An unobtrusive CMS system designed to bolt on to an existing MVC3 Razor or ASPX web app. Includes image uploading and wiki style editing.</description>

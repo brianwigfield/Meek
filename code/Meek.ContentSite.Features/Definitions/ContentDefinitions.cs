@@ -115,7 +115,7 @@ namespace Meek.ContentSite.Features.Definitions
                 UxSession.Driver.FindElement(By.ClassName("MeekCreateLink"));
                 Assert.Fail("Create link exists but shouldn't.");
             }
-            catch (NoSuchElementException ex)
+            catch (NoSuchElementException)
             {
                 Assert.Pass();
             }
@@ -147,7 +147,7 @@ namespace Meek.ContentSite.Features.Definitions
                 UxSession.Driver.FindElement(By.ClassName("MeekEditLink"));
                 Assert.Fail("Edit link exists but shouldn't.");
             }
-            catch (NoSuchElementException ex)
+            catch (NoSuchElementException)
             {
                 Assert.Pass();
             }

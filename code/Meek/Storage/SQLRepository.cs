@@ -5,8 +5,6 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Data.SqlServerCe;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -17,6 +15,8 @@ namespace Meek.Storage
     {
         readonly DbProviderFactory _factory;
         readonly string _connectString;
+        public event EventHandler<ResourceChangedArgs> FileChanged;
+        public event EventHandler<ResourceChangedArgs> ContentChanged;
 
         public SqlRepository(string connectionStringName)
         {
@@ -143,6 +143,8 @@ namespace Meek.Storage
                 command.ExecuteNonQuery();
             }
 
+            if (ContentChanged != null)
+                ContentChanged(this, new ResourceChangedArgs { Path = route });
         }
 
         public void Remove(string route)
@@ -155,14 +157,17 @@ namespace Meek.Storage
                 AddParam(command, SqlDbType.NVarChar, route, "Route");
                 command.ExecuteNonQuery();
             }
+
+            if (ContentChanged != null)
+                ContentChanged(this, new ResourceChangedArgs { Path = route });
         }
 
         public string SaveFile(MeekFile file)
         {
-
+            string fileId;
             using (var conn = OpenConnection())
             {
-                var fileId = Guid.NewGuid().ToString();
+                fileId = Guid.NewGuid().ToString();
                 var command = _factory.CreateCommand();
                 command.Connection = conn;
                 command.CommandText = "INSERT INTO MeekFile (Id, FileName, ContentType, Data) Values (@Id, @FileName, @ContentType, @Data)"; ;
@@ -172,9 +177,12 @@ namespace Meek.Storage
                 AddParam(command, SqlDbType.Image, file.Contents, "Data");
 
                 command.ExecuteNonQuery();
-                return fileId;
             }
 
+            if (FileChanged != null)
+                FileChanged(this, new ResourceChangedArgs { Path = fileId });
+
+            return fileId;
         }
 
         public MeekFile GetFile(string fileId)
@@ -224,6 +232,8 @@ namespace Meek.Storage
                 AddParam(command, SqlDbType.NVarChar, fileId, "Id");
                 command.ExecuteNonQuery();
             }
+            if (FileChanged != null)
+                FileChanged(this, new ResourceChangedArgs { Path = fileId });
         }
 
         private DbConnection OpenConnection()

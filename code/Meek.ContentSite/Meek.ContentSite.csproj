@@ -88,7 +88,6 @@
     <Compile Include="PdfThumbnailGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Resources\PdfIcon.png" />
-    <Content Include="Script.sql" />
     <Compile Include="Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
