@@ -35,6 +35,10 @@ namespace Meek
             if (config == null)
                 throw new ArgumentException("Configuration can't be null");
 
+            //prevents double initializations
+            if (Configuration != null)
+                return;
+
             Configuration = config;
 
             //If we map partial routes as well then they will be able to navigated to directly
