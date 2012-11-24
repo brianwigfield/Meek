@@ -95,6 +95,10 @@ namespace Meek.Specs
                 .Return(true);
 
             The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetRepository().Get("existing/route"))
+                .Return(new MeekContent("a title", "some content", false));
+
+            The<Configuration.Configuration>()
                 .WhenToldTo(x => x.GetRepository().Remove("existing/route"));
 
             RouteTable.Routes.Add(new MeekRoute("existing/route"));
@@ -151,6 +155,37 @@ namespace Meek.Specs
 
         static ActionResult _result;
     }
+
+
+    public class When_a_content_admin_asks_to_delete_an_existing_page_partial : WithSubject<MeekTestController>
+    {
+        Establish that = () =>
+        {
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetAuthorization().IsContentAdmin(GivenIt.IsAny<HttpContextBase>()))
+                .Return(true);
+
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetRepository().Get("existing/route"))
+                .Return(new MeekContent("a title", "some content", true));
+
+            The<Configuration.Configuration>()
+                .WhenToldTo(x => x.GetRepository().Remove("existing/route"));
+        };
+
+        Because of = () =>
+            _result = Subject.Delete("existing/route");
+
+        It Should_delete_from_storage = () =>
+            The<Configuration.Configuration>()
+                .WasToldTo(x => x.GetRepository().Remove("existing/route"));
+
+        It Should_redirect_to_the_homepage = () =>
+            _result.AssertHttpRedirect().ToUrl("/");
+
+        static ActionResult _result;
+    }
+
 
     public class When_a_non_content_admin_enters_page_content : WithSubject<MeekTestController>
     {

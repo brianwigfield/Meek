@@ -138,9 +138,13 @@ namespace Meek
         {
             if (!_auth.IsContentAdmin(HttpContext))
                 return new HttpStatusCodeResult(403);
-            
+
+            var existingContent = _repository.Get(manageUrl);
+
             _repository.Remove(manageUrl);
-            RouteTable.Routes.Remove(RouteTable.Routes.Cast<Route>().Single(x => x.Url == manageUrl));
+
+            if (existingContent.Partial == false)
+                RouteTable.Routes.Remove(RouteTable.Routes.Cast<Route>().Single(x => x.Url == manageUrl));
 
             return Redirect("/");
         }
